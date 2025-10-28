@@ -1,0 +1,15 @@
+<button (click)="handleClick()" type="button" [disabled]="disabled"
+  [class]="customClass + ' bg-gradient-to-tr from-purple-700 to-blue-600 hover:from-blue-600purple-600 hover:to-blue-700 transition-all flex items-center justify-center whitespace-nowrap text-white cursor-pointer md:text-base rounded-lg text-normal shadow-none py-[0.5rem] px-[0.7rem] md:py-[0.7rem] md:px-[0.7rem] outline-0'"
+  [ngClass]="[
+    disabled ? 'cursor-not-allowed opacity-40 ' : '',
+    status == 'LOADING' ? 'loading' : ''
+  ]">
+  <div class="flex items-center justify-center gap-2">
+    <span><img [src]="buttonImage" class="" /></span>
+    <span>{{ buttonText }} </span>
+    <span><img [src]="buttonImage2" alt="" /></span>
+  </div>
+</button>
+
+<!-- Sample -->
+<!-- <app-button [buttonText]="'Add Patient Manually'" [customClass]="'w-full'"></app-button> -->

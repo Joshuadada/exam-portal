@@ -1,0 +1,41 @@
+<div class="bg-gray-900 text-gray-100 h-screen fixed md:static inset-y-0 left-0 flex flex-col transform transition-transform duration-300 ease-in-out z-50"
+    [class.-translate-x-full]="!sidebarOpen()" [class.w-16]="!sidebarOpen()" [class.w-52]="sidebarOpen()">
+    <!-- Header / Logo -->
+    <div class="flex items-center justify-between p-3 border-b border-gray-800">
+        <h1 class="text-base font-semibold tracking-wide transition-all duration-300 whitespace-nowrap"
+            [class.hidden]="!sidebarOpen()">
+            Exam Portal
+        </h1>
+        <button class="md:hidden text-gray-400 hover:text-gray-200" (click)="toggleSidebar()">
+            <i class="fas fa-times text-sm"></i>
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex flex-col mt-4 space-y-1 px-2">
+        @for (item of navItems; track $index) {
+        <a [routerLink]="item.route" routerLinkActive="bg-gray-800 text-white"
+            class="flex items-center gap-3 px-3 py-2 hover:bg-gray-800 transition-all duration-200 rounded-md"
+            [class.justify-center]="!sidebarOpen()">
+            <i [class]="item.icon + ' text-gray-400 text-sm w-4'"></i>
+            <span class="transition-opacity duration-300 text-[10px] sm:text-xs md:text-sm" [class.opacity-0]="!sidebarOpen()"
+                [class.hidden]="!sidebarOpen()">
+                {{ item.label }}
+            </span>
+        </a>
+        }
+    </nav>
+
+    <!-- Logout -->
+    <div class="mt-auto border-t border-gray-800 p-3">
+        <button (click)="logout()"
+            class="flex items-center gap-3 text-red-400 hover:text-red-300 w-full py-2 transition"
+            [class.justify-center]="!sidebarOpen()">
+            <i class="fas fa-sign-out-alt text-base"></i>
+            <span class="transition-opacity duration-300 text-sm" [class.opacity-0]="!sidebarOpen()"
+                [class.hidden]="!sidebarOpen()">
+                Logout
+            </span>
+        </button>
+    </div>
+</div>

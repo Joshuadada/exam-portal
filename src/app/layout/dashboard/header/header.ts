@@ -1,0 +1,12 @@
+import { Component } from '@angular/core';
+import { toggleSidebar } from '../../../core/state/ui.store';
+
+@Component({
+  selector: 'app-header',
+  imports: [],
+  templateUrl: './header.html',
+  styleUrl: './header.scss',
+})
+export class Header {
+  toggleSidebar = toggleSidebar;
+}
