@@ -21,11 +21,10 @@ export class Sidebar {
 
   constructor(private router: Router) {}
   navItems: NavItem[] = [
-    { label: 'Dashboard', icon: 'fas fa-home', route: '/student/dashboard' },
+    { label: 'Dashboard', icon: 'fas fa-home', route: '/student/home' },
     { label: 'Exams', icon: 'fas fa-file-alt', route: '/student/exams' },
     { label: 'Results', icon: 'fas fa-chart-bar', route: '/student/results' },
-    { label: 'Feedback', icon: 'fas fa-comment-dots', route: '/student/feedback' },
-    { label: 'Settings', icon: 'fas fa-cog', route: '/student/settings' },
+    { label: 'Profile', icon: 'fas fa-cog', route: '/student/profile' },
   ];
 
   logout() {

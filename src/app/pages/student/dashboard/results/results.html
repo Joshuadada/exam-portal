@@ -1,0 +1,130 @@
+<div class="p-8 flex flex-col gap-8 animate-fadeIn">
+
+    <!-- Header -->
+    <div
+      class="bg-white/70 backdrop-blur-md rounded-md shadow-md p-6 border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-800 mb-1">Exam Results</h1>
+        <p class="text-gray-500">Browse through your completed exams and performance summary.</p>
+      </div>
+  
+      <!-- Search & Filter -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <!-- Search -->
+        <div class="relative">
+          <input
+            [(ngModel)]="searchTerm"
+            (input)="filterResults()"
+            type="text"
+            placeholder="Search by exam title..."
+            class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none w-64"
+          />
+          <svg
+            class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 21l-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"
+            />
+          </svg>
+        </div>
+  
+        <!-- Filter -->
+        <select
+          [(ngModel)]="selectedFilter"
+          (change)="filterResults()"
+          class="border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        >
+          <option value="all">All</option>
+          <option value="passed">Passed</option>
+          <option value="failed">Failed</option>
+        </select>
+      </div>
+    </div>
+  
+    <!-- Results Grid -->
+    <div *ngIf="filteredResults.length; else noResults"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let result of filteredResults"
+        class="bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition-transform hover:-translate-y-1 p-6 flex flex-col justify-between"
+      >
+        <div>
+          <!-- Exam Title -->
+          <h2 class="text-xl font-semibold text-gray-800 mb-2">
+            {{ result.examTitle }}
+          </h2>
+          <p class="text-gray-500 text-sm mb-4">Taken on {{ result.dateTaken }}</p>
+  
+          <!-- Score Ring -->
+          <div class="flex justify-center items-center relative mb-4">
+            <svg class="w-24 h-24 transform -rotate-90">
+              <circle
+                cx="48"
+                cy="48"
+                r="40"
+                stroke="#E5E7EB"
+                stroke-width="8"
+                fill="transparent"
+              ></circle>
+              <circle
+                cx="48"
+                cy="48"
+                r="40"
+                [attr.stroke]="result.scoreColor"
+                stroke-width="8"
+                fill="transparent"
+                [attr.stroke-dasharray]="circumference"
+                [attr.stroke-dashoffset]="getDashOffset(result.score)"
+                stroke-linecap="round"
+                class="transition-all duration-700 ease-in-out"
+              ></circle>
+            </svg>
+            <div class="absolute text-xl font-bold text-slate-700">
+              {{ result.score }}%
+            </div>
+          </div>
+  
+          <!-- Grade and Status -->
+          <div class="flex justify-between items-center mb-4">
+            <span
+              class="text-sm font-semibold px-3 py-1 rounded-full"
+              [ngClass]="{
+                'bg-green-100 text-green-700': result.status === 'Passed',
+                'bg-red-100 text-red-700': result.status === 'Failed'
+              }"
+            >
+              {{ result.status }}
+            </span>
+  
+            <span
+              class="text-sm font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-700"
+            >
+              Grade {{ result.grade }}
+            </span>
+          </div>
+        </div>
+  
+        <!-- CTA -->
+        <button
+          (click)="viewDetails(result)"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-transform hover:-translate-y-0.5"
+        >
+          View Details
+        </button>
+      </div>
+    </div>
+  
+    <!-- No Results Template -->
+    <ng-template #noResults>
+      <div class="text-center text-gray-500 py-10">
+        <p>No results found. Try adjusting your search or filters.</p>
+      </div>
+    </ng-template>
+  </div>
+  

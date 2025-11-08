@@ -6,7 +6,7 @@
         [type]="'password'" label="Password" [required]="true">
     </app-text-input>
     <!-- <a class="cursor-pointer text-blue-400 hover:text-purple-500 text-sm">forgot password?</a> -->
-    <app-button [buttonText]="'Sign in'" [disabled]="loginForm.invalid" [customClass]="'w-full mt-2'"></app-button>
+    <app-button [buttonText]="'Sign in'" [disabled]="loginForm.invalid" (buttonClick)="login()" [customClass]="'w-full mt-2'"></app-button>
     <p class="text-sm text-center">Sign in as an examiner <a
             class="cursor-pointer text-blue-400 hover:text-purple-500">here!</a>
     </p>
