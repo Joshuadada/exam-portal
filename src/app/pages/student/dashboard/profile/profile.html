@@ -5,9 +5,9 @@
         <img src="assets/images/profile-avatar.png" alt="Profile picture"
             class="w-32 h-32 rounded-full border-4 border-blue-100 object-cover" />
         <div>
-            <h2 class="text-2xl font-semibold text-gray-800">Joshua Babatunde</h2>
-            <p class="text-gray-500">Frontend Engineer</p>
-            <p class="text-sm text-gray-400">Stanbic IBTC Bank</p>
+            <h2 class="text-2xl font-semibold text-gray-800">{{user.name}}</h2>
+            <p class="text-gray-500">{{user.role}}</p>
+            <p class="text-sm text-gray-400">{{user.institution}}</p>
             <button (click)="openEditDialog()" class="mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition">
                 Reset Password
             </button>

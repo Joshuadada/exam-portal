@@ -22,6 +22,6 @@ export class ExamInstruction {
   }
 
   proceedToExam(id: number) {
-    this.router.navigate([`/student/exams/${id}/start`]);
+    this.router.navigate([`/exam-session`]);
   }
 }

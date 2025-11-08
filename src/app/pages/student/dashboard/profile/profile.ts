@@ -13,8 +13,8 @@ export class Profile {
   user = {
     name: 'Joshua Babatunde',
     email: 'joshua.babatunde@example.com',
-    role: 'Frontend Engineer',
-    institution: 'Stanbic IBTC Bank',
+    role: 'Student',
+    institution: 'University of Lagos',
     stats: {
       taken: 12,
       passed: 9,

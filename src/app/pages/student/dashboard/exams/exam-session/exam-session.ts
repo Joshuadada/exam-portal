@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, OnDestroy, signal } from '@angular/core';
+import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
 
 type Subpart = {
@@ -17,11 +18,12 @@ type Question = {
 
 @Component({
   selector: 'app-exam-session',
-  imports: [CommonModule, FormsModule, NgxEditorModule],
+  imports: [CommonModule, FormsModule, NgxEditorModule, RouterModule],
   templateUrl: './exam-session.html',
   styleUrl: './exam-session.scss',
 })
 export class ExamSession implements OnDestroy {
+  private router = inject(Router)
   timeRemaining = signal(60 * 60);
   currentQuestionIndex = signal(0);
   editors: Map<string, Editor> = new Map();
@@ -182,7 +184,6 @@ export class ExamSession implements OnDestroy {
       subparts: q.subparts.map(sp => ({ id: sp.id, answer: sp.answer })),
     }));
 
-    console.log('Exam submitted:', answers);
-    alert('Exam submitted successfully!');
+    this.router.navigate(['/student/exams/result'])
   }
 }

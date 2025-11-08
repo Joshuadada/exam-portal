@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
 interface Exam {
   id: number;
@@ -11,11 +12,13 @@ interface Exam {
 
 @Component({
   selector: 'app-exams',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './exams.html',
   styleUrl: './exams.scss',
 })
 export class Exams {
+  private router = inject(Router);
+
   exams = signal<Exam[]>([
     { id: 1, title: 'Artificial Intelligence Fundamentals', duration: '1 hr', questions: 5, status: 'Not Started' },
     { id: 2, title: 'Machine Learning Concepts', duration: '45 mins', questions: 4, status: 'In Progress' },
@@ -27,8 +30,7 @@ export class Exams {
   startExam(examId: number) {
     const exam = this.exams().find(e => e.id === examId);
     if (exam) {
-      // Navigate to exam instruction page later
-      alert(`Starting exam: ${exam.title}`);
+      this.router.navigate(['/student/exams/instruction'])
     }
   }
 }

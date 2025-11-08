@@ -1,13 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-exam-result',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './exam-result.html',
   styleUrl: './exam-result.scss',
 })
 export class ExamResult {
+  private router = inject(Router);
+
   studentName = 'Joshua';
 
   result = {
@@ -89,6 +92,6 @@ export class ExamResult {
   }
 
   goToDashboard() {
-    // route to dashboard
+   this.router.navigate(['/student/home'])
   }
 }
