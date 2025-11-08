@@ -21,10 +21,10 @@ export class Exams {
 
   exams = signal<Exam[]>([
     { id: 1, title: 'Artificial Intelligence Fundamentals', duration: '1 hr', questions: 5, status: 'Not Started' },
-    { id: 2, title: 'Machine Learning Concepts', duration: '45 mins', questions: 4, status: 'In Progress' },
+    { id: 2, title: 'Machine Learning Concepts', duration: '45 mins', questions: 4, status: 'Not Started' },
     { id: 3, title: 'Database Systems and Design', duration: '1 hr 30 mins', questions: 6, status: 'Completed' },
     { id: 1, title: 'Artificial Intelligence Fundamentals', duration: '1 hr', questions: 5, status: 'Not Started' },
-    { id: 2, title: 'Machine Learning Concepts', duration: '45 mins', questions: 4, status: 'In Progress' },
+    { id: 2, title: 'Machine Learning Concepts', duration: '45 mins', questions: 4, status: 'Not Started' },
   ]);
 
   startExam(examId: number) {

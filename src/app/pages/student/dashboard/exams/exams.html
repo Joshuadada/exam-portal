@@ -20,7 +20,6 @@
       >
         <option value="">All Status</option>
         <option value="Not Started">Not Started</option>
-        <option value="In Progress">In Progress</option>
         <option value="Completed">Completed</option>
       </select>
     </div>
@@ -44,7 +43,6 @@
             class="absolute top-3 right-3 px-2 py-1 text-[0.6rem] font-medium rounded-md backdrop-blur-md bg-white/70"
             [ngClass]="{
               'text-green-700': exam.status === 'Completed',
-              'text-yellow-700': exam.status === 'In Progress',
               'text-gray-700': exam.status === 'Not Started'
             }"
           >
