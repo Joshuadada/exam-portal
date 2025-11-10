@@ -12,13 +12,15 @@
 
     <!-- Summary Stats -->
     <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div *ngFor="let card of summaryCards"
+        @for (card of summaryCards; track card) {
+        <div
             class="p-6 rounded-md shadow bg-white border border-gray-100 text-center hover:shadow-md transition-transform hover:-translate-y-1 animate-slideInUp">
             <div class="text-sm text-gray-500">{{ card.label }}</div>
             <div class="text-lg font-bold mt-2" [ngClass]="card.color">
                 {{ card.value }}
             </div>
         </div>
+        }
     </div>
 
     <!-- Score Ring -->
@@ -45,18 +47,19 @@
         </h2>
 
         <div class="flex flex-wrap gap-4">
-            <div *ngFor="let stat of result.breakdown"
-                class="flex items-center gap-3 px-4 py-2 rounded-xl border bg-gray-50">
+            @for (stat of result.breakdown; track stat) {
+            <div class="flex items-center gap-3 px-4 py-2 rounded-xl border bg-gray-50">
                 <span class="w-3 h-3 rounded-full" [ngClass]="{
-            'bg-green-500': stat.type === 'Correct',
-            'bg-red-500': stat.type === 'Wrong',
-            'bg-gray-400': stat.type === 'Unanswered'
-          }"></span>
+                'bg-green-500': stat.type === 'Correct',
+                'bg-red-500': stat.type === 'Wrong',
+                'bg-gray-400': stat.type === 'Unanswered'
+              }"></span>
                 <p class="text-gray-700">
                     {{ stat.type }}:
                     <span class="font-semibold">{{ stat.count }}</span>
                 </p>
             </div>
+            }
         </div>
     </div>
 
@@ -67,8 +70,8 @@
         </h2>
 
         <div class="space-y-4">
-            <div *ngFor="let group of result.questions; index as i"
-                class="border border-gray-100 rounded-md bg-gray-50 hover:bg-white transition-all hover:shadow-md"
+            @for (group of result.questions; track group; let i = $index) {
+            <div class="border border-gray-100 rounded-md bg-gray-50 hover:bg-white transition-all hover:shadow-md"
                 [style.animationDelay]="i * 0.05 + 's'">
                 <!-- Accordion Header -->
                 <button class="w-full flex justify-between items-center px-6 py-4 text-left focus:outline-none"
@@ -91,16 +94,16 @@
                 <div class="overflow-hidden transition-all duration-500"
                     [style.maxHeight]="activeIndex === i ? '1000px' : '0px'">
                     <div class="px-6 pb-6 space-y-6">
-                        <div *ngFor="let sub of group.subQuestions; index as j"
-                            class="border border-gray-200 rounded-lg bg-gray-50 p-4 hover:bg-gray-100 transition">
+                        @for (sub of group.subQuestions; track sub; let j = $index) {
+                        <div class="border border-gray-200 rounded-lg bg-gray-50 p-4 hover:bg-gray-100 transition">
                             <div class="flex justify-between items-center mb-2">
                                 <h4 class="text-sm font-semibold text-gray-800">
                                     ({{ group.label }}{{ sub.subPart }}) {{ sub.text }}
                                 </h4>
                                 <span class="text-xs px-3 py-1 rounded-full font-medium" [ngClass]="{
-                'bg-green-100 text-green-700': sub.isCorrect,
-                'bg-red-100 text-red-700': !sub.isCorrect
-              }">
+                          'bg-green-100 text-green-700': sub.isCorrect,
+                          'bg-red-100 text-red-700': !sub.isCorrect
+                        }">
                                     {{ sub.isCorrect ? 'Correct' : 'Incorrect' }}
                                 </span>
                             </div>
@@ -108,9 +111,9 @@
                             <div class="bg-gray-100 p-3 rounded-xl text-sm mb-2">
                                 <strong>Your Answer:</strong>
                                 <div [ngClass]="{
-                'text-green-700': sub.isCorrect,
-                'text-red-700': !sub.isCorrect
-              }">
+                          'text-green-700': sub.isCorrect,
+                          'text-red-700': !sub.isCorrect
+                        }">
                                     {{ sub.answer }}
                                 </div>
                             </div>
@@ -120,14 +123,18 @@
                                 <div class="text-green-700">{{ sub.correctAnswer }}</div>
                             </div>
 
-                            <div *ngIf="sub.feedback" class="bg-blue-50 p-3 rounded-xl text-sm">
+                            @if (sub.feedback) {
+                            <div class="bg-blue-50 p-3 rounded-xl text-sm">
                                 <strong>Instructor Feedback:</strong>
                                 <div class="text-blue-700">{{ sub.feedback }}</div>
                             </div>
+                            }
                         </div>
+                        }
                     </div>
                 </div>
             </div>
+            }
         </div>
     </div>
 

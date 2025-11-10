@@ -1,52 +1,96 @@
-<div class="" [formGroup]="formGrp" class="relative">
-    <input [max]="max?max:''" [min]="min?min:''" [id]="id || formCtrlName" [type]="type" [placeholder]="placeholder"
-        [class]="customClass + ' block px-2.5 pb-2.5 pt-4 w-full text-sm bg-white rounded-lg border appearance-none focus:outline-none focus:ring-0 peer'"
-        [required]="required" [readonly]="readonly" [formControlName]="formCtrlName"
-        [ngClass]="{ 'border-blue-600': formGrp.controls[formCtrlName].valid && formGrp.controls[formCtrlName].touched, 'border-red-600': formGrp.controls[formCtrlName].invalid && formGrp.controls[formCtrlName].touched }"
-        [value]="value" [pattern]="pattern" [name]="name" />
+<div [formGroup]="formGrp" class="relative">
+    <input [max]="max ? max : ''" [min]="min ? min : ''" [id]="id || formCtrlName" [type]="type"
+        [placeholder]="placeholder" [class]="
+        customClass +
+        ' block px-2.5 pb-2.5 pt-4 w-full text-sm bg-white rounded-lg border appearance-none focus:outline-none focus:ring-0 peer'
+      " [required]="required" [readonly]="readonly" [formControlName]="formCtrlName" [ngClass]="{
+        'border-blue-600':
+          formGrp.controls[formCtrlName].valid &&
+          formGrp.controls[formCtrlName].touched,
+        'border-red-600':
+          formGrp.controls[formCtrlName].invalid &&
+          formGrp.controls[formCtrlName].touched
+      }" [value]="value" [pattern]="pattern" [name]="name" />
+
     <label
         class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
         [for]="id || formCtrlName">
-        {{label}} <span class="text-red-600" *ngIf="required">*</span>
+        {{ label }}
+        @if (required) {
+        <span class="text-red-600">*</span>
+        }
     </label>
 </div>
 
 <div>
-    <small class="text-red-500 mt-1"
-        [class.hidden]="formGrp.controls[formCtrlName].valid || formGrp.controls[formCtrlName].untouched"
-        *ngIf="formGrp.controls[formCtrlName].errors?.['required']">
+    @if (formGrp.controls[formCtrlName].errors?.['required']) {
+    <small class="text-red-500 mt-1" [class.hidden]="
+          formGrp.controls[formCtrlName].valid ||
+          formGrp.controls[formCtrlName].untouched
+        ">
         {{ name }} is required
     </small>
-    <small class="text-red-500 mt-1" *ngIf="formGrp.controls[formCtrlName].errors?.['minlength']">
-        {{ name }} should be at least {{formGrp.controls[formCtrlName].errors?.['minlength'].requiredLength}} characters
-    </small>
-    <small class="text-red-500 mt-1" *ngIf="formGrp.controls[formCtrlName].errors?.['maxlength']">
-        {{ name }} should not be more than {{formGrp.controls[formCtrlName].errors?.['maxlength'].requiredLength}}
+    }
+
+    @if (formGrp.controls[formCtrlName].errors?.['minlength']) {
+    <small class="text-red-500 mt-1">
+        {{ name }} should be at least
+        {{
+        formGrp.controls[formCtrlName].errors?.['minlength'].requiredLength
+        }}
         characters
     </small>
-    <small [class.hidden]="formGrp.controls[formCtrlName].valid || formGrp.controls[formCtrlName].untouched"
-        class="text-red-500 mt-1" *ngIf="formGrp.controls[formCtrlName].errors?.['notFound']">
+    }
+
+    @if (formGrp.controls[formCtrlName].errors?.['maxlength']) {
+    <small class="text-red-500 mt-1">
+        {{ name }} should not be more than
+        {{
+        formGrp.controls[formCtrlName].errors?.['maxlength'].requiredLength
+        }}
+        characters
+    </small>
+    }
+
+    @if (formGrp.controls[formCtrlName].errors?.['notFound']) {
+    <small class="text-red-500 mt-1" [class.hidden]="
+          formGrp.controls[formCtrlName].valid ||
+          formGrp.controls[formCtrlName].untouched
+        ">
         Record not found
     </small>
-    <small [class.hidden]="formGrp.controls[formCtrlName].valid || formGrp.controls[formCtrlName].untouched"
-        class="text-red-500 mt-1" *ngIf="formGrp.controls[formCtrlName].errors?.['notCorrect']">
-        {{name}} is not valid
+    }
+
+    @if (formGrp.controls[formCtrlName].errors?.['notCorrect']) {
+    <small class="text-red-500 mt-1" [class.hidden]="
+          formGrp.controls[formCtrlName].valid ||
+          formGrp.controls[formCtrlName].untouched
+        ">
+        {{ name }} is not valid
     </small>
-    <small [class.hidden]="formGrp.controls[formCtrlName].valid || formGrp.controls[formCtrlName].untouched"
-        class="text-red-500 mt-1" *ngIf="formGrp.controls[formCtrlName].errors?.['mismatch']">
-        {{matchName||'Passwords'}} do not match
+    }
+
+    @if (formGrp.controls[formCtrlName].errors?.['mismatch']) {
+    <small class="text-red-500 mt-1" [class.hidden]="
+          formGrp.controls[formCtrlName].valid ||
+          formGrp.controls[formCtrlName].untouched
+        ">
+        {{ matchName || 'Passwords' }} do not match
     </small>
-    <small [class.hidden]="formGrp.controls[formCtrlName].valid || formGrp.controls[formCtrlName].untouched"
-        class="text-red-500 mt-1" *ngIf="formGrp.controls[formCtrlName].errors?.['email']">
+    }
+
+    @if (formGrp.controls[formCtrlName].errors?.['email']) {
+    <small class="text-red-500 mt-1" [class.hidden]="
+          formGrp.controls[formCtrlName].valid ||
+          formGrp.controls[formCtrlName].untouched
+        ">
         Invalid Email
     </small>
-    <small class="text-red-500" *ngIf="formGrp.controls[formCtrlName].errors?.['pattern']">
-        {{name}} is not valid
+    }
+
+    @if (formGrp.controls[formCtrlName].errors?.['pattern']) {
+    <small class="text-red-500 mt-1">
+        {{ name }} is not valid
     </small>
+    }
 </div>
-
-
-<!-- Sample -->
-<!-- <app-input [formGrp]="verifyPatientForm" name="SSN ID" formCtrlName="ssnId" [placeholder]="'SSN ID'" [type]="'password'"
-    label="SSN ID" [required]="true">
-</app-input> -->
