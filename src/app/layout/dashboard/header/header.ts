@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { toggleSidebar } from '../../../core/state/ui.store';
 
 @Component({
@@ -9,4 +9,5 @@ import { toggleSidebar } from '../../../core/state/ui.store';
 })
 export class Header {
   toggleSidebar = toggleSidebar;
+  @Input({required: true}) portalName!: string
 }

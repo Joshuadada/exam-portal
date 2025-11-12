@@ -27,10 +27,10 @@ export class Login {
   }
 
   login() {
-    this.router.navigate(['/student'])
+    this.router.navigate(['/examiner'])
   }
 
   signInAsExaminer(){
-    this.router.navigate(['/examiner-login'])
+    this.router.navigate(['/login'])
   }
 }

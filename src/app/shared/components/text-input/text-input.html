@@ -2,7 +2,7 @@
     <input [max]="max ? max : ''" [min]="min ? min : ''" [id]="id || formCtrlName" [type]="type"
         [placeholder]="placeholder" [class]="
         customClass +
-        ' block px-2.5 pb-2.5 pt-4 w-full text-sm bg-white rounded-lg border appearance-none focus:outline-none focus:ring-0 peer'
+        ' block px-2.5 pb-2.5 pt-4 w-full text-sm bg-white rounded-lg border placeholder:text-transparent appearance-none focus:outline-none focus:ring-0 peer'
       " [required]="required" [readonly]="readonly" [formControlName]="formCtrlName" [ngClass]="{
         'border-blue-600':
           formGrp.controls[formCtrlName].valid &&
@@ -13,7 +13,7 @@
       }" [value]="value" [pattern]="pattern" [name]="name" />
 
     <label
-        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
         [for]="id || formCtrlName">
         {{ label }}
         @if (required) {

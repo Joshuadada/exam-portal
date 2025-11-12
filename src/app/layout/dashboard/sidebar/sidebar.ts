@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { sidebarOpen, toggleSidebar } from '../../../core/state/ui.store';
 
@@ -20,12 +20,7 @@ export class Sidebar {
   toggleSidebar = toggleSidebar;
 
   constructor(private router: Router) {}
-  navItems: NavItem[] = [
-    { label: 'Dashboard', icon: 'fas fa-home', route: '/student/home' },
-    { label: 'Exams', icon: 'fas fa-file-alt', route: '/student/exams' },
-    { label: 'Results', icon: 'fas fa-chart-bar', route: '/student/results' },
-    { label: 'Profile', icon: 'fas fa-cog', route: '/student/profile' },
-  ];
+  @Input({required: true}) navItems: NavItem[] = [];
 
   logout() {
     this.router.navigate(['/logout']);

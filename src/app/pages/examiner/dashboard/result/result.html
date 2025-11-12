@@ -1,0 +1,56 @@
+<div class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-10">
+        <h1 class="text-2xl font-bold text-gray-800">Exam Results Overview</h1>
+        <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition">
+            Export All Results
+        </button>
+    </div>
+
+    <!-- Results Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-auto">
+        <table class="w-full border-collapse">
+            <thead class="bg-gray-100 text-gray-700 text-sm">
+                <tr>
+                    <th class="p-4 text-left font-semibold">Student Name</th>
+                    <th class="p-4 text-left font-semibold">Matric No</th>
+                    <th class="p-4 text-left font-semibold">Course Code</th>
+                    <th class="p-4 text-left font-semibold">Course Title</th>
+                    <th class="p-4 text-left font-semibold">Exam Date</th>
+                    <th class="p-4 text-left font-semibold">Score</th>
+                    <th class="p-4 text-left font-semibold">Grade</th>
+                    <th class="p-4 text-left font-semibold">Status</th>
+                    <th class="p-4 text-center font-semibold">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (result of results; track $index) {
+                    <tr class="border-b hover:bg-gray-50 transition">
+                    <td class="p-4 text-gray-800 font-medium">{{ result.name }}</td>
+                    <td class="p-4">{{ result.matricNo }}</td>
+                    <td class="p-4">{{ result.courseCode }}</td>
+                    <td class="p-4">{{ result.courseTitle }}</td>
+                    <td class="p-4">{{ result.ExamDate }}</td>
+                    <td class="p-4">{{ result.score }}%</td>
+                    <td class="p-4">{{ result.grade }}</td>
+                    <td class="p-4">
+                        <span [ngClass]="{
+                'bg-green-100 text-green-700': result.status === 'Passed',
+                'bg-red-100 text-red-700': result.status === 'Failed'
+              }" class="px-3 py-1 rounded-full text-sm font-medium">
+                            {{ result.status }}
+                        </span>
+                    </td>
+                    <td class="p-4 text-center">
+                        <button (click)="viewDetails(result)"
+                            class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+                }
+                
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Sidebar } from "../../../layout/dashboard/sidebar/sidebar";
 import { Header } from "../../../layout/dashboard/header/header";
-import { RouterModule } from '@angular/router';
+import { RouterModule } from "@angular/router";
 
 interface NavItem {
   label: string;
@@ -17,9 +17,8 @@ interface NavItem {
 })
 export class Dashboard {
   navItems: NavItem[] = [
-    { label: 'Dashboard', icon: 'fas fa-home', route: '/student/home' },
-    { label: 'Exams', icon: 'fas fa-file-alt', route: '/student/exams' },
-    { label: 'Results', icon: 'fas fa-chart-bar', route: '/student/results' },
-    { label: 'Profile', icon: 'fas fa-cog', route: '/student/profile' },
-  ];
+    { label: 'Dashboard', icon: 'fas fa-home', route: '/examiner/home' },
+    { label: 'Exams', icon: 'fas fa-file-alt', route: '/examiner/exams' },
+    { label: 'Results', icon: 'fas fa-chart-line', route: '/examiner/results' },
+  ];  
 }

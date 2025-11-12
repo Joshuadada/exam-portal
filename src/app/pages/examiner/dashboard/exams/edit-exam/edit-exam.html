@@ -1,0 +1,186 @@
+<div class="mx-auto space-y-10 animate-fadeIn">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">Edit Exam</h1>
+            <p class="text-gray-500 text-sm mt-1">
+                Set up a new theory exam with structured questions and subparts.
+            </p>
+        </div>
+    </div>
+
+    <!-- Exam Form -->
+    <form [formGroup]="examForm" (ngSubmit)="onSubmit()" class="space-y-8">
+        <div class="bg-white shadow-md rounded-xl p-6 border border-gray-100 space-y-6">
+            <!-- Exam Details -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Exam Title</label>
+                    <input formControlName="title" type="text" placeholder="e.g. Object-Oriented Programming"
+                        class="w-full border rounded-lg px-4 py-2.5 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Course Code</label>
+                    <input formControlName="courseCode" type="text" placeholder="e.g. CSC 204"
+                        class="w-full border rounded-lg px-4 py-2.5 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Duration (minutes)</label>
+                    <input formControlName="duration" type="number" placeholder="e.g. 60"
+                        class="w-full border rounded-lg px-4 py-2.5 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                </div>
+            </div>
+
+            <!-- Instructions Editor -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Instructions</label>
+                <div class="ngx-editor-container border border-gray-200 rounded-lg">
+                    <ngx-editor-menu [editor]="getInstructionsEditor()" [toolbar]="toolbar"></ngx-editor-menu>
+                    <ngx-editor [editor]="getInstructionsEditor()" formControlName="instructions"
+                        [placeholder]="'Enter exam instructions...'" [outputFormat]="'html'">
+                    </ngx-editor>
+                </div>
+            </div>
+
+            <!-- Marking Scheme Upload -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Marking Scheme (Optional)
+                    <span class="text-gray-500 font-normal text-xs ml-1">PDF or Word document, max 10MB</span>
+                </label>
+
+                @if (!markingSchemeFileName) {
+                <div class="relative">
+                    <input type="file" #fileInput (change)="onMarkingSchemeFileChange($event)"
+                        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        class="hidden" id="markingSchemeInput" />
+                    <button type="button" (click)="fileInput.click()"
+                        class="w-full border-2 border-dashed border-gray-300 rounded-lg px-4 py-6 text-center hover:border-blue-400 hover:bg-blue-50 transition cursor-pointer">
+                        <i class="fas fa-file-upload text-gray-400 text-2xl mb-2"></i>
+                        <p class="text-sm text-gray-600">
+                            Click to upload marking scheme
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">
+                            Supported formats: PDF, DOC, DOCX
+                        </p>
+                    </button>
+                </div>
+                } @else {
+                <div class="border border-gray-200 rounded-lg px-4 py-3 bg-gray-50 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">{{ markingSchemeFileName }}</p>
+                            <p class="text-xs text-gray-500">
+                                {{ (markingSchemeFile?.size || 0) / 1024 / 1024 | number:'1.2-2' }} MB
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" (click)="removeMarkingSchemeFile()"
+                        class="text-red-500 hover:text-red-700 text-sm">
+                        <i class="fas fa-times mr-1"></i> Remove
+                    </button>
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Questions Section -->
+        <div class="space-y-6">
+            <h2 class="text-xl font-semibold text-gray-800">Questions</h2>
+
+            <!-- wrapper for questions form array -->
+            <div formArrayName="questions" class="space-y-6">
+                @for (q of questions.controls; track q; let qIndex = $index) {
+                <!-- each question group -->
+                <div [formGroupName]="qIndex"
+                    class="bg-white shadow-sm border border-gray-100 rounded-xl p-6 space-y-5">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <label class="font-medium text-gray-700">Question {{ qIndex + 1 }}</label>
+                            <input formControlName="number" placeholder="e.g. 1"
+                                class="w-20 border rounded-lg px-3 py-1 text-center text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                        </div>
+
+                        @if (questions.length > 1) {
+                        <button type="button" (click)="removeQuestion(qIndex)"
+                            class="text-red-500 hover:text-red-700 text-sm">
+                            <i class="fas fa-trash mr-1"></i> Remove Question
+                        </button>
+                        }
+                    </div>
+
+                    <!-- subQuestions array -->
+                    <div formArrayName="subQuestions" class="space-y-5 border-l-4 border-blue-100 pl-4">
+                        @for (s of getSubQuestions(qIndex).controls; track s; let sIndex = $index) {
+                        <div [formGroupName]="sIndex" class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <label class="text-gray-700 font-medium">
+                                    Sub-question
+                                    <!-- display number + label if exists -->
+                                    {{ getQuestionGroup(qIndex).get('number')?.value || (qIndex + 1) }}
+                                    {{ getSubQuestionGroup(qIndex, sIndex).get('label')?.value || '' }}
+                                </label>
+
+                                @if (getSubQuestions(qIndex).length > 1) {
+                                <button type="button" (click)="removeSubQuestion(qIndex, sIndex)"
+                                    class="text-red-500 hover:text-red-700 text-xs">
+                                    Remove
+                                </button>
+                                }
+                            </div>
+
+                            <div class="grid gap-4 mt-3">
+                                <div class="md:col-span-1">
+                                    <label class="block text-sm text-gray-600 mb-1">Label</label>
+                                    <input formControlName="label" placeholder="a"
+                                        class="w-full border rounded-lg px-3 py-1.5 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                                </div>
+
+                                <div class="md:col-span-3">
+                                    <label class="block text-sm text-gray-600 mb-1">Question Text</label>
+                                    @if (getSubQuestionEditor(qIndex, sIndex); as editor) {
+                                    <div class="ngx-editor-container border border-gray-200 rounded-lg">
+                                        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+                                        <ngx-editor [editor]="editor" formControlName="questionText"
+                                            [placeholder]="'Type your question here...'" [outputFormat]="'html'">
+                                        </ngx-editor>
+                                    </div>
+                                    }
+                                </div>
+
+                                <div class="md:col-span-1">
+                                    <label class="block text-sm text-gray-600 mb-1">Marks</label>
+                                    <input formControlName="marks" type="number" placeholder="5"
+                                        class="w-full border rounded-lg px-3 py-1.5 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                                </div>
+                            </div>
+                        </div>
+                        }
+
+                        <button type="button" (click)="addSubQuestion(qIndex)"
+                            class="text-blue-600 hover:text-blue-800 text-sm mt-3 flex items-center">
+                            <i class="fas fa-plus mr-1"></i> Add Sub-question
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+
+            <button type="button" (click)="addQuestion()"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2 rounded-lg font-medium transition">
+                <i class="fas fa-plus mr-2"></i> Add Question
+            </button>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-6 border-t border-gray-200">
+            <button type="submit" [disabled]="examForm.invalid"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-md transition disabled:bg-gray-400 disabled:cursor-not-allowed">
+                Save Exam
+            </button>
+        </div>
+    </form>
+</div>

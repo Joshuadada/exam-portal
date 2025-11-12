@@ -1,19 +1,60 @@
-
-<div class="flex h-screen relative">
-    <div class="w-full max-w-[400px] mx-auto md:w-[400px] md:shadow-md px-6 md:px-14 py-14 relative">
-        <h4 class="font-semibold text-center text-3xl mb-20">Examiner</h4>
-        <div class="flex flex-col gap-4">
+<div class="relative h-screen w-full bg-gray-100">
+    <!-- Background image -->
+    <img src="images/auth-img.jpg"
+         class="absolute inset-0 w-full h-full object-cover filter brightness-75"
+         alt="Background Image">
+  
+    <!-- Overlay gradient for depth -->
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600/30 via-blue-600/20 to-transparent"></div>
+  
+    <div class="flex h-full relative z-10">
+      <!-- Left Side - Feature Section -->
+      <div class="hidden md:flex flex-1 flex-col justify-center p-16 text-white relative overflow-hidden">
+        <!-- Decorative shapes -->
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-2xl"></div>
+  
+        <h1 class="text-5xl font-extrabold mb-4 drop-shadow-lg">Welcome Back!</h1>
+        <p class="text-base mb-8 max-w-sm drop-shadow-sm">
+          Sign in to your student portal to access exams, track your progress, and stay ahead in your learning journey.
+        </p>
+  
+        <ul class="space-y-4 text-white/90">
+          <li class="flex items-center gap-3">
+            <span class="w-3 h-3 bg-white rounded-full animate-pulse"></span>
+            Easy access to all your exams
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-3 h-3 bg-white rounded-full animate-pulse"></span>
+            Track performance instantly
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-3 h-3 bg-white rounded-full animate-pulse"></span>
+            Secure and reliable platform
+          </li>
+        </ul>
+      </div>
+  
+      <!-- Right Side - Glassmorphism Login Card -->
+      <div class="flex-1 flex items-center justify-center px-6 md:px-0">
+        <div class="w-full max-w-md bg-white/20 backdrop-blur-md border border-white/30 rounded-3xl shadow-lg p-10 md:p-14 relative z-20">
+          
+          <!-- Portal Label -->
+          <div class="absolute top-4 left-4 text-sm font-medium text-purple-100 border border-purple-200 rounded-full px-3 py-1 -rotate-12 shadow-md backdrop-blur-sm">
+            {{portalName | titlecase}} Portal
+          </div>
+  
+          <!-- Login content -->
+          <div class="flex flex-col gap-6">
             <ng-content></ng-content>
+          </div>
+  
+          <!-- Footer -->
+          <footer class="mt-2 w-full text-center text-white/70 text-xs">
+            &copy; {{thisYear}} | Examiner
+          </footer>
         </div>
-        <footer class="absolute bottom-1 -translate-x-1/2 left-1/2">
-            <p class="text-sm text-center">&copy; {{thisYear}} | Examiner</p>
-        </footer>
+      </div>
     </div>
-    <div class="hidden flex-1 md:block">
-        <img src="images/auth-img.jpg"
-            class="w-full h-full object-cover transition-all duration-600 filter grayscale hover:grayscale-0" alt="">
-    </div>
-    <div
-        class="text-sm font-light text-blue-400 border border-blue-400 rounded-[50%] p-3 -rotate-45 text-center w-[130px] absolute top-10 left-0">
-        {{portalName | titlecase}} Portal</div>
-</div>
+  </div>
+  
