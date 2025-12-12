@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatDialog } from '@angular/material/dialog';
 import { EditProfileDialog } from '../../../../shared/modals/edit-profile-dialog/edit-profile-dialog';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })

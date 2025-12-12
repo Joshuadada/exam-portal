@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { sidebarOpen, toggleSidebar } from '../../../core/state/ui.store';
@@ -11,7 +11,7 @@ interface NavItem {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })

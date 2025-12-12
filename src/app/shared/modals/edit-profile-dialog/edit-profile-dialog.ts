@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { TextInput } from "../../components/text-input/text-input";
 
 @Component({
   selector: 'app-edit-profile-dialog',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './edit-profile-dialog.html',
   styleUrl: './edit-profile-dialog.scss',
 })
