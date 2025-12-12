@@ -34,11 +34,7 @@ export class Login {
     });
   }
 
-  login() {
-    this.router.navigate(['/student'])
-  }
-
-  onLogin(): void {
+  login(): void {
     if (this.loginForm.invalid) return;
 
     this.authService
@@ -53,7 +49,7 @@ export class Login {
             this.utilsService.setTokens(accessToken, refreshToken);
 
             this.alertService.success(res?.message);
-
+            this.router.navigate(['/student'])
 
           } else {
             this.alertService.error(res?.message || res?.error || 'An error occurred');
