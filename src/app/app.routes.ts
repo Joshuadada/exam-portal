@@ -11,13 +11,13 @@ export const routes: Routes = [
     {
         path: 'login',
         loadComponent: () =>
-            import('./pages/student/auth/login/login').then((m) => m.Login)
+            import('./pages/auth/login/login').then((m) => m.Login)
     },
 
     {
-        path: 'examiner-login',
+        path: 'register',
         loadComponent: () =>
-            import('./pages/examiner/auth/login/login').then((m) => m.Login)
+            import('./pages/auth/register/register').then((m) => m.Register)
     },
 
     // 🔹 Student Dashboard (with nested routes)

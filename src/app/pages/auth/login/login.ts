@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { TextInput } from "../../../../shared/components/text-input/text-input";
-import { Button } from "../../../../shared/components/button/button";
+import { TextInput } from "../../../shared/components/text-input/text-input";
+import { Button } from "../../../shared/components/button/button";
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthLayout } from "../../../../layout/auth/auth-layout/auth-layout";
+import { AuthLayout } from "../../../layout/auth/auth-layout/auth-layout";
 import { Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthService } from '../../../../core/services/auth/auth.service';
-import { AlertService } from '../../../../core/services/shared/alert/alert.service';
-import { UtilsService } from '../../../../core/services/shared/utils/utils.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { AlertService } from '../../../core/services/shared/alert/alert.service';
+import { UtilsService } from '../../../core/services/shared/utils/utils.service';
 
 @Component({
   selector: 'app-login',
@@ -62,7 +62,7 @@ export class Login {
       });
   }
 
-  signInAsExaminer() {
-    this.router.navigate(['/examiner-login'])
+  register() {
+    this.router.navigate(['/register'])
   }
 }

@@ -31,6 +31,16 @@ export class AuthService {
     );
   }
 
+  register(payload: { email: string, password: string, full_name: string, role: string, department: string, student_id: string }): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse>(
+      `${this.baseUrl}/auth/register`,
+      payload,
+      {
+        headers: { skip: 'true' }
+      }
+    );
+  }
+
   refreshToken(refreshToken: string): Observable<any> {
     return this.http.post<any>(
       `${this.baseUrl}/auth/refresh-token

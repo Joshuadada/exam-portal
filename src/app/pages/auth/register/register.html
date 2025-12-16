@@ -1,0 +1,55 @@
+<app-auth-layout portalName="student">
+    <!-- Welcome Message -->
+    <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold text-white drop-shadow-md mb-2">Sign in</h2>
+        <p class="text-white/80">Enter your credentials to continue</p>
+    </div>
+
+    <!-- Login Form -->
+    <div class="flex flex-col gap-4">
+        <app-text-input [formGrp]="registerForm" name="Email" formCtrlName="email" [placeholder]="'Email'" [type]="'email'"
+            label="Email" [required]="true"
+            [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
+        </app-text-input>
+
+        <app-text-input [formGrp]="registerForm" name="Full name" formCtrlName="fullName" [placeholder]="'Full name'" [type]="'text'"
+            label="Full name" [required]="true"
+            [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
+        </app-text-input>
+
+        <app-text-input [formGrp]="registerForm" name="Department" formCtrlName="department" [placeholder]="'Department'" [type]="'text'"
+            label="Department" [required]="true"
+            [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
+        </app-text-input>
+
+        <app-text-input [formGrp]="registerForm" name="Matric number" formCtrlName="studentId" [placeholder]="'Matric number'" [type]="'text'"
+            label="Matric number" [required]="true"
+            [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
+        </app-text-input>
+
+        <app-text-input [formGrp]="registerForm" name="Role" formCtrlName="role" [placeholder]="'Role'" [type]="'text'"
+            label="Role" [required]="true"
+            [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
+        </app-text-input>
+
+        <app-text-input [formGrp]="registerForm" name="Password" formCtrlName="password" [placeholder]="'Password'"
+            [type]="'password'" label="Password" [required]="true"
+            [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
+        </app-text-input>
+
+        <a class="self-end text-sm text-purple-200 hover:text-purple-400 transition-colors cursor-pointer mb-2">
+            Forgot password?
+        </a>
+
+        <app-button [buttonText]="'Sign in'" [disabled]="registerForm.invalid" (buttonClick)="register()"
+            [customClass]="'w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-xl transition-all shadow-lg'">
+        </app-button>
+    </div>
+
+    <!-- Alternative login -->
+    <p class="text-sm text-center mt-6 text-white/70">
+        Already have an account?
+        <a class="text-purple-200 hover:text-purple-400 font-medium cursor-pointer transition-colors"
+            (click)="login()">login!</a>
+    </p>
+</app-auth-layout>
