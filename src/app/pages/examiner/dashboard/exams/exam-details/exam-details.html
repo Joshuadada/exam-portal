@@ -1,13 +1,4 @@
 <div class="mx-auto space-y-8 animate-fadeIn">
-    <!-- Loading State -->
-    @if (loading) {
-    <div class="flex items-center justify-center py-20">
-        <div class="text-center">
-            <i class="fas fa-spinner fa-spin text-4xl text-blue-600 mb-4"></i>
-            <p class="text-gray-600">Loading exam details...</p>
-        </div>
-    </div>
-    }
 
     <!-- Exam Details -->
     @if (!loading && exam) {
@@ -19,29 +10,35 @@
                     <button (click)="goBack()" class="text-gray-600 hover:text-gray-800 transition">
                         <i class="fas fa-arrow-left text-lg"></i>
                     </button>
-                    <h1 class="text-3xl font-bold text-slate-800">{{ exam.title }}</h1>
+                    <h1 class="text-3xl font-bold text-slate-800">{{ exam?.title }}</h1>
                 </div>
 
                 <div class="flex flex-wrap gap-4 text-sm text-gray-600 mt-3">
                     <div class="flex items-center gap-2">
                         <i class="fas fa-clock text-blue-600"></i>
-                        <span><strong>Duration:</strong> {{ exam.duration }} minutes</span>
+                        <span><strong>Duration:</strong> {{ exam?.duration | minutesToHours }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <i class="fas fa-star text-yellow-500"></i>
-                        <span><strong>Total Marks:</strong> {{ exam.totalMarks }}</span>
+                        <span><strong>Total Marks:</strong> {{ exam?.totalMarks }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <i class="fas fa-question-circle text-green-600"></i>
-                        <span><strong>Questions:</strong> {{ exam.questions.length }}</span>
+                        <span><strong>Questions:</strong> {{ exam?.questions?.length }}</span>
                     </div>
                 </div>
 
-                @if (exam.createdAt) {
+                @if (exam?.examinerName) {
                 <div class="mt-3 text-xs text-gray-500">
-                    <span>Created: {{ exam.createdAt | date:'medium' }}</span>
-                    @if (exam.updatedAt && exam.updatedAt !== exam.createdAt) {
-                    <span class="ml-4">Last updated: {{ exam.updatedAt | date:'medium' }}</span>
+                    <span>Examiner Name: {{ exam?.examinerName }}</span>
+                </div>
+                }
+
+                @if (exam?.createdAt) {
+                <div class="mt-3 text-xs text-gray-500">
+                    <span>Created: {{ exam?.createdAt | date:'medium' }}</span>
+                    @if (exam?.updatedAt && exam?.updatedAt !== exam?.createdAt) {
+                    <span class="ml-4">Last updated: {{ exam?.updatedAt | date:'medium' }}</span>
                     }
                 </div>
                 }
@@ -97,34 +94,6 @@
         </div>
     </div>
 
-    <!-- Marking Scheme -->
-    @if (exam.markingScheme) {
-    <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <i class="fas fa-file-alt text-purple-600"></i>
-            Marking Scheme
-        </h2>
-        <div class="bg-white rounded-lg p-4 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="bg-purple-100 p-3 rounded-lg">
-                    <i class="fas fa-file-pdf text-purple-600 text-2xl"></i>
-                </div>
-                <div>
-                    <p class="font-medium text-gray-800">{{ exam.markingScheme.fileName }}</p>
-                    <p class="text-sm text-gray-500">
-                        {{ formatFileSize(exam.markingScheme.fileSize) }} MB
-                    </p>
-                </div>
-            </div>
-            <button (click)="downloadMarkingScheme()"
-                class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
-                <i class="fas fa-download"></i>
-                Download
-            </button>
-        </div>
-    </div>
-    }
-
     <!-- Questions -->
     <div class="space-y-6">
         <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
@@ -141,7 +110,7 @@
                         Question {{ question.number }}
                     </h3>
                     <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        {{ getQuestionTotalMarks(question) }} marks
+                        {{ exam.totalMarks }} marks
                     </span>
                 </div>
             </div>
@@ -158,7 +127,13 @@
                             {{ subQuestion.marks }} marks
                         </span>
                     </div>
-                    <div class="prose prose-sm max-w-none text-gray-700 mt-2" [innerHTML]="subQuestion.questionText">
+                    <div class="prose prose-sm max-w-none text-gray-700 mt-2">
+                        <h4><strong>Question</strong></h4>
+                        <p [innerHTML]="subQuestion.questionText"></p>
+                    </div>
+                    <div class="prose prose-sm max-w-none text-gray-700 mt-2">
+                        <h4><strong>Marking Guide</strong></h4>
+                        <p [innerHTML]="subQuestion.markingGuide"></p>
                     </div>
                 </div>
 

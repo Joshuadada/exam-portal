@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class UtilsService {
-  private readonly accessTokenKey = 'hajj-access-token';
-  private readonly refreshTokenKey = 'hajj-refresh-token';
+  private readonly accessTokenKey = 'exam-portal-access-token';
+  private readonly refreshTokenKey = 'exam-portal-refresh-token';
   private isClearing = false;
 
   private authService = inject(AuthService);
@@ -78,10 +78,13 @@ export class UtilsService {
   // ================================
 
   logout(): void {
-    this.authService.logout().pipe(finalize(() => {
-      this.clearTokens();
-      this.router.navigate(['/auth/login'])
-    })).subscribe()
+    // this.authService.logout().pipe(finalize(() => {
+    //   this.clearTokens();
+    //   this.router.navigate(['/auth/login'])
+    // })).subscribe()
+    this.clearTokens();
+    localStorage.removeItem('user')
+    this.router.navigate(['/login'])
   }
 
   isLoggedIn$ = this.decodedToken$.pipe(

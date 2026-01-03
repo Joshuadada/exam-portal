@@ -1,4 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { AlertService } from '../../../../core/services/shared/alert/alert.service';
+import { Dashboard } from '../../../../core/services/student/dashboard/dashboard';
+import { Subject, takeUntil } from 'rxjs';
+import { ExamType } from '../../../../core/types/exam.type';
 
 @Component({
   selector: 'app-home',
@@ -7,39 +11,59 @@ import { Component, OnInit, signal } from '@angular/core';
   styleUrl: './home.scss',
 })
 export class Home implements OnInit {
-  totalExams = 7;
-  completedExams = 4;
-  pendingExams = 3;
-  averageScore = 85;
+  private alertService = inject(AlertService);
+  private dashboardService = inject(Dashboard);
+  private destroy$ = new Subject<void>();
+
+  recentExams: ExamType[] = []
 
   // Animated signals
   totalExamsCount = signal(0);
-  completedExamsCount = signal(0);
-  pendingExamsCount = signal(0);
-  averageScoreCount = signal(0);
+  attemptedExamsCount = signal(0);
+  averageScoreCount = signal('');
 
   ngOnInit(): void {
-    // Animate counts smoothly when dashboard loads
-    this.animateCount(this.totalExamsCount, this.totalExams, 1000);
-    this.animateCount(this.completedExamsCount, this.completedExams, 1000);
-    this.animateCount(this.pendingExamsCount, this.pendingExams, 1000);
-    this.animateCount(this.averageScoreCount, this.averageScore, 1200);
+    this.getRecentExams();
+    this.getDashboardData();
   }
 
-  private animateCount(signalVar: any, endValue: number, duration: number) {
-    const startTime = performance.now();
-    const startValue = 0;
+  getRecentExams() {
+    this.dashboardService
+      .getRecentExams()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.recentExams = res.data || []
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Recent exam API error:', err);
+        },
+      });
+  }
 
-    const update = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const currentValue = Math.floor(startValue + (endValue - startValue) * progress);
-
-      signalVar.set(currentValue);
-
-      if (progress < 1) requestAnimationFrame(update);
-    };
-
-    requestAnimationFrame(update);
+  getDashboardData() {
+    this.dashboardService
+      .getStudentDashboardData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.totalExamsCount.set(res.data?.availableExamCount || 0)
+            this.attemptedExamsCount.set(res?.data?.attemptedExamCount || 0)
+            this.averageScoreCount.set(res?.data?.averageScore || '100%')
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Recent exam API error:', err);
+        },
+      });
   }
 }

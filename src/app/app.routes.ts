@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { StudentAuthGuard } from './core/guards/student-auth-guard.guard';
+import { ExaminerAuthGuard } from './core/guards/examiner-auth-guard.guard';
 
 export const routes: Routes = [
     {
@@ -42,7 +44,7 @@ export const routes: Routes = [
                     import('./pages/student/dashboard/exams/exams').then((m) => m.Exams),
             },
             {
-                path: 'exams/instruction',
+                path: 'exams/instruction/:id',
                 loadComponent: () =>
                     import(
                         './pages/student/dashboard/exams/exam-instruction/exam-instruction'
@@ -70,6 +72,7 @@ export const routes: Routes = [
                     ),
             },
         ],
+        canActivate: [StudentAuthGuard],
     },
 
     {
@@ -98,12 +101,12 @@ export const routes: Routes = [
                     import('./pages/examiner/dashboard/exams/create-exam/create-exam').then((m) => m.CreateExam),
             },
             {
-                path: 'exams/details',
+                path: 'exams/details/:id',
                 loadComponent: () =>
                     import('./pages/examiner/dashboard/exams/exam-details/exam-details').then((m) => m.ExamDetails),
             },
             {
-                path: 'exams/edit',
+                path: 'exams/edit/:id',
                 loadComponent: () =>
                     import('./pages/examiner/dashboard/exams/edit-exam/edit-exam').then((m) => m.EditExam),
             },
@@ -117,12 +120,13 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./pages/examiner/dashboard/result/result-details/result-details').then((m) => m.ResultDetails),
             },
-        ]
+        ],
+        canActivate: [ExaminerAuthGuard],
     },
 
     // 🔹 Exam Session (outside student dashboard)
     {
-        path: 'exam-session',
+        path: 'exam-session/:id',
         loadComponent: () =>
             import('./pages/student/dashboard/exams/exam-session/exam-session').then(
                 (m) => m.ExamSession

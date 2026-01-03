@@ -1,3 +1,4 @@
+@if (exam) {
 <div class="bg-gray-50 flex flex-col items-center justify-center">
     <div class="w-full max-w-3xl bg-white rounded-3xl shadow-lg p-8 md:p-10 border border-gray-100 animate-fade-in-up">
         <!-- Back Button -->
@@ -8,54 +9,62 @@
 
         <!-- Header -->
         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center tracking-tight animate-fade-in-down">
-            {{ exam.title }}
+            {{ exam?.title }} ({{exam?.courseCode}})
         </h1>
 
         <!-- Summary Pills -->
         <div class="flex flex-wrap justify-center gap-4 mb-8 animate-fade-in-up">
             <div class="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full text-blue-700 font-medium text-sm">
                 <i class="fas fa-clock"></i>
-                Duration: {{ exam.duration }}
+                Duration: {{ exam?.duration }}
             </div>
             <div class="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full text-green-700 font-medium text-sm">
                 <i class="fas fa-question-circle"></i>
-                {{ exam.questions }} Questions
-              </div>              
+                {{ exam?.totalQuestions }} Question(s)
+            </div>
         </div>
 
         <!-- Instructions Card -->
         <div
-            class="bg-gray-50 border border-gray-100 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-sm animate-fade-in-up">
-            <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-4">
-                Before you start
-            </h2>
-            <ul class="space-y-3 text-gray-600 text-sm leading-relaxed">
-                <li class="flex items-start gap-3">
-                    <i class="fas fa-wifi text-blue-600 mt-1"></i>
-                    <span>Ensure you have a stable internet connection before starting the exam.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <i class="fas fa-stopwatch text-blue-600 mt-1"></i>
-                    <span>The timer starts immediately after you click "Proceed".</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <i class="fas fa-ban text-blue-600 mt-1"></i>
-                    <span>Do not refresh or close the browser while the exam is ongoing.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <i class="fas fa-eye text-blue-600 mt-1"></i>
-                    <span>Read each question carefully before submitting your answers.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <i class="fas fa-check-circle text-blue-600 mt-1"></i>
-                    <span>Click “Submit Exam” only when you’re completely done.</span>
-                </li>
-            </ul>
+            class="bg-gray-50 border border-gray-100 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-sm animate-fade-in-up flex flex-col gap-6">
+            <div>
+                <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-4">
+                    Before you start
+                </h2>
+                <ul class="space-y-3 text-gray-600 text-sm leading-relaxed">
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-wifi text-blue-600 mt-1"></i>
+                        <span>Ensure you have a stable internet connection before starting the exam.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-stopwatch text-blue-600 mt-1"></i>
+                        <span>The timer starts immediately after you click "Proceed".</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-ban text-blue-600 mt-1"></i>
+                        <span>Do not refresh or close the browser while the exam is ongoing.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-eye text-blue-600 mt-1"></i>
+                        <span>Read each question carefully before submitting your answers.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-check-circle text-blue-600 mt-1"></i>
+                        <span>Click “Submit Exam” only when you’re completely done.</span>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-4">
+                    Examiner's Instructions
+                </h2>
+                <div [innerHTML]="exam?.instructions"></div>
+            </div>
         </div>
 
         <!-- Proceed Button -->
         <div class="text-center mt-10 animate-fade-in-up">
-            <button (click)="proceedToExam(exam.id)"
+            <button (click)="proceedToExam(exam?.id || '')"
                 class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
                 Proceed to Exam
                 <i class="fas fa-arrow-right ml-2"></i>
@@ -63,3 +72,4 @@
         </div>
     </div>
 </div>
+}

@@ -1,93 +1,99 @@
 <div class="animate-fade-in">
-    <!-- Header -->
-    <h1
-      class="text-xl md:text-2xl font-bold text-gray-900 mb-10 text-left tracking-tight animate-fade-in-down"
-    >
-      My Exams
-    </h1>
-  
-    <!-- Search and Filter -->
+  <!-- Header -->
+  <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-10 text-left tracking-tight animate-fade-in-down">
+    My Exams
+  </h1>
+
+  <!-- Search and Filter -->
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 animate-fade-in-up">
+    <input type="text" placeholder="Search exams..."
+      class="w-full sm:w-1/2 border border-gray-200 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-gray-700 placeholder-gray-400" />
+    <select
+      class="w-full sm:w-48 border border-gray-200 rounded-md px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all">
+      <option value="">All Status</option>
+      <option value="Not Started">Not Started</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
+
+  @if (exams().length > 0) {
+  <!-- Exams Grid -->
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in-up">
+    @for (exam of exams(); track exam.id) {
     <div
-      class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 animate-fade-in-up"
-    >
-      <input
-        type="text"
-        placeholder="Search exams..."
-        class="w-full sm:w-1/2 border border-gray-200 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-gray-700 placeholder-gray-400"
-      />
-      <select
-        class="w-full sm:w-48 border border-gray-200 rounded-md px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
-      >
-        <option value="">All Status</option>
-        <option value="Not Started">Not Started</option>
-        <option value="Completed">Completed</option>
-      </select>
-    </div>
-  
-    <!-- Exams Grid -->
-    <div
-      class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in-up"
-    >
-      @for (exam of exams(); track exam.id) {
+      class="group relative overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300">
+      <!-- Gradient Aura -->
       <div
-        class="bg-white border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1.5 transform transition-all duration-300"
-      >
-        <!-- Thumbnail -->
-        <div class="relative h-36 bg-gradient-to-r from-blue-500 to-indigo-500">
-          <img
-            [src]="'images/auth-img.jpg'"
-            alt="{{ exam.title }}"
-            class="w-full h-full object-cover"
-          />
-          <div
-            class="absolute top-3 right-3 px-2 py-1 text-[0.6rem] font-medium rounded-md backdrop-blur-md bg-white/70"
-            [ngClass]="{
-              'text-green-700': exam.status === 'Completed',
-              'text-gray-700': exam.status === 'Not Started'
-            }"
-          >
-            {{ exam.status }}
-          </div>
+        class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+      </div>
+
+      <!-- Top Accent -->
+      <div class="relative h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
+      <!-- Header -->
+      <div class="relative px-6 pt-5">
+        <p class="text-[0.7rem] uppercase tracking-widest text-indigo-500 font-semibold">
+          {{ exam.courseCode }}
+        </p>
+
+        <h2 class="mt-2 text-lg font-semibold text-gray-900 leading-snug line-clamp-2">
+          {{ exam.title }}
+        </h2>
+
+        <p class="mt-2 text-xs text-gray-500">
+          By {{ exam.examinerName }}
+        </p>
+      </div>
+
+      <!-- Divider -->
+      <div class="relative my-4 mx-6 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+
+      <!-- Stats -->
+      <div class="relative px-6 grid grid-cols-2 gap-4 text-sm">
+        <div class="rounded-lg bg-gray-50 px-3 py-2">
+          <p class="text-[0.65rem] text-gray-400 uppercase tracking-wide">Date</p>
+          <p class="font-semibold text-gray-800">
+            {{ exam.examDate | date }}
+          </p>
         </div>
-  
-        <!-- Card Body -->
-        <div class="p-5 flex flex-col justify-between flex-grow">
-          <div>
-            <h2
-              class="text-lg md:text-xl font-semibold text-gray-900 mb-2 line-clamp-1"
-            >
-              {{ exam.title }}
-            </h2>
-            <p class="text-gray-500 text-sm mb-1">
-              Duration:
-              <span class="font-medium text-gray-700">{{ exam.duration }}</span>
-            </p>
-            <p class="text-gray-500 text-sm">
-              Questions:
-              <span class="font-medium text-gray-700">{{ exam.questions }}</span>
-            </p>
-          </div>
-  
-          <button
-            (click)="startExam(exam.id)"
-            [disabled]="exam.status === 'Completed'"
-            class="mt-6 w-full py-2.5 rounded-md font-semibold text-sm transition-all duration-300"
-            [ngClass]="{
-              'bg-blue-600 text-white hover:bg-blue-700': exam.status !== 'Completed',
-              'bg-gray-200 text-gray-500 cursor-not-allowed': exam.status === 'Completed'
-            }"
-          >
-            {{
-              exam.status === 'In Progress'
-                ? 'Continue Exam'
-                : exam.status === 'Completed'
-                ? 'View Review'
-                : 'Start Exam'
-            }}
-          </button>
+
+        <div class="rounded-lg bg-gray-50 px-3 py-2">
+          <p class="text-[0.65rem] text-gray-400 uppercase tracking-wide">Duration</p>
+          <p class="font-semibold text-gray-800">
+            {{ exam.duration | minutesToHours }}
+          </p>
+        </div>
+
+        <div class="col-span-2 rounded-lg bg-gray-50 px-3 py-2">
+          <p class="text-[0.65rem] text-gray-400 uppercase tracking-wide">Total Marks</p>
+          <p class="font-semibold text-gray-800">
+            {{ exam.totalMarks }}
+          </p>
         </div>
       </div>
-      }
+
+      <!-- CTA -->
+      <div class="relative px-6 py-5">
+        <button (click)="startExam(exam.id)"
+          class="group/button w-full rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg">
+          <span class="inline-flex items-center justify-center gap-2">
+            Start Exam
+            <span class="inline-block transition-transform duration-300 group-hover/button:translate-x-1">
+              →
+            </span>
+          </span>
+        </button>
+      </div>
     </div>
+    }
   </div>
-  
+  } @else {
+  <!-- Empty State -->
+  <div class="text-center py-20 text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+    <i class="fas fa-folder-open text-5xl text-gray-400 mb-4"></i>
+    <p class="text-lg font-medium mb-2">No new exams available</p>
+    <p class="text-sm mb-6">There is no new exams available</p>
+  </div>
+  }
+
+</div>

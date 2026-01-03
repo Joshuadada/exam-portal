@@ -8,7 +8,7 @@
   
     <!-- Stats Grid -->
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 animate-fade-in-up"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 animate-fade-in-up"
     >
       <!-- Total Exams -->
       <div
@@ -24,19 +24,9 @@
       <div
         class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-all duration-300 border border-gray-100"
       >
-        <div class="text-sm text-gray-500">Completed</div>
+        <div class="text-sm text-gray-500">Total Attempted Exams</div>
         <div class="text-2xl font-semibold text-green-600 mt-1">
-          {{ completedExamsCount() }}
-        </div>
-      </div>
-  
-      <!-- Pending -->
-      <div
-        class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-all duration-300 border border-gray-100"
-      >
-        <div class="text-sm text-gray-500">Pending</div>
-        <div class="text-2xl font-semibold text-yellow-500 mt-1">
-          {{ pendingExamsCount() }}
+          {{ attemptedExamsCount() }}
         </div>
       </div>
   
@@ -46,7 +36,7 @@
       >
         <div class="text-sm text-gray-500">Average Score</div>
         <div class="text-2xl font-semibold text-blue-600 mt-1">
-          {{ averageScoreCount() }}%
+          {{ averageScoreCount() }}
         </div>
       </div>
     </div>

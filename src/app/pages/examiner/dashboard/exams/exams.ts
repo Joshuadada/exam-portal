@@ -1,55 +1,47 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-
-interface Exam {
-  id: number;
-  title: string;
-  courseCode: string;
-  duration: string;
-  status: 'Published' | 'Draft';
-  questionCount: number;
-  createdAt: string;
-}
+import { Exam } from '../../../../core/services/examiner/exam/exam';
+import { Subject, takeUntil } from 'rxjs';
+import { ExamType } from '../../../../core/types/exam.type';
+import { AlertService } from '../../../../core/services/shared/alert/alert.service';
+import { MinutesToHoursPipe } from "../../../../core/pipes/minutes-to-hours-pipe";
 
 @Component({
   selector: 'app-exams',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MinutesToHoursPipe],
   templateUrl: './exams.html',
   styleUrl: './exams.scss',
 })
-export class Exams {
+export class Exams implements OnInit {
   private router = inject(Router)
+  private examService = inject(Exam)
+  private destroy$ = new Subject<void>();
+  private alertService = inject(AlertService);
+  exams: ExamType[] = []
 
-  exams: Exam[] = [
-    {
-      id: 1,
-      title: 'Object-Oriented Programming',
-      courseCode: "CSC 201",
-      duration: '60 mins',
-      status: 'Published',
-      questionCount: 6,
-      createdAt: 'Oct 12, 2025',
-    },
-    {
-      id: 2,
-      title: 'Database Systems',
-      courseCode: "CSC 201",
-      duration: '45 mins',
-      status: 'Draft',
-      questionCount: 4,
-      createdAt: 'Nov 5, 2025',
-    },
-    {
-      id: 3,
-      title: 'Software Engineering',
-      courseCode: "CSC 201",
-      duration: '90 mins',
-      status: 'Published',
-      questionCount: 8,
-      createdAt: 'Sep 25, 2025',
-    },
-  ];
+  ngOnInit() {
+    this.getExams();
+  }
+
+  getExams() {
+    this.examService
+      .getExaminerExams()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.exams = res.data || []
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Exam API error:', err);
+        },
+      });
+  }
 
   getStatusClass(status: string) {
     return status === 'Published'
@@ -61,19 +53,30 @@ export class Exams {
     this.router.navigate(['examiner/exams/create']);
   }
 
-  onEdit(exam: Exam) {
+  onEdit(id: string) {
     this.router.navigate(['examiner/exams/edit'])
-    console.log('Editing', exam.title);
   }
 
-  onView(exam: Exam) {
-    this.router.navigate(['examiner/exams/details'])
-    console.log('Viewing', exam.title);
+  onView(id: string) {
+    this.router.navigate(['examiner/exams/details', id])
   }
 
-  onDelete(exam: Exam) {
-    if (confirm(`Delete ${exam.title}?`)) {
-      this.exams = this.exams.filter((e) => e.id !== exam.id);
-    }
+  onDelete(id: string) {
+    this.examService.deleteExam(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.alertService.success(res?.message, 'Delete');
+            this.getExams();
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Exam API error:', err);
+        },
+      });
   }
 }

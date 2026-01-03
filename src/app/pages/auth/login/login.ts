@@ -43,14 +43,18 @@ export class Login {
       .subscribe({
         next: (res) => {
           if (res.isSuccessful === true) {
-            const accessToken = res?.data?.accessToken as string;
+            const accessToken = res?.data?.access_token as string;
             const refreshToken = res?.data?.refreshToken as string;
 
             this.utilsService.setTokens(accessToken, refreshToken);
 
             this.alertService.success(res?.message);
-            this.router.navigate(['/student'])
-
+            localStorage.setItem('user', JSON.stringify(res?.data?.user))
+            if(res?.data?.user?.role === 'student') {
+              this.router.navigate(['/student'])
+            } else {
+              this.router.navigate(['/examiner'])
+            }
           } else {
             this.alertService.error(res?.message || res?.error || 'An error occurred');
           }

@@ -1,28 +1,51 @@
-<!-- Fixed Top Bar -->
-<header class="fixed top-0 left-0 right-0 bg-white border-b shadow-sm z-50 px-5 py-3 flex justify-between items-center">
-    <h1 class="text-lg md:text-xl font-semibold text-gray-800">Exam Session</h1>
-    <div class="flex items-center gap-4">
-        <div class="text-gray-600 font-medium text-sm md:text-base">
-            Time Remaining:
-            <span class="text-blue-600 font-semibold">{{ formatTime(timeRemaining()) }}</span>
+<!-- Loading State -->
+@if (isLoading()) {
+<div class="fixed inset-0 bg-gray-50 flex items-center justify-center z-50">
+    <div class="text-center">
+        <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4">
         </div>
-        <button (click)="submitExam()"
-            class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
-            Submit
-        </button>
+        <p class="text-gray-600 font-medium">Loading exam...</p>
+    </div>
+</div>
+}
+
+<!-- Exam Content -->
+@if (!isLoading() && questions().length > 0) {
+<!-- Fixed Top Bar -->
+<header class="fixed top-0 left-0 right-0 bg-white border-b shadow-sm z-50 px-5 py-3">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+            <div>
+                <h1 class="text-lg md:text-xl font-semibold text-gray-800">{{ getExamTitle() }}</h1>
+                <p class="text-sm text-gray-600">{{ examData()?.examinerName }} • {{ getTotalMarks() }} marks</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-gray-600 font-medium text-sm md:text-base">
+                    Time Remaining:
+                    <span class="text-blue-600 font-semibold" [ngClass]="{
+                            'text-red-600': timeRemaining() < 300,
+                            'animate-pulse': timeRemaining() < 60
+                        }">{{ formatTime(timeRemaining()) }}</span>
+                </div>
+                <button (click)="submitExam()"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+                    Submit
+                </button>
+            </div>
+        </div>
     </div>
 </header>
 
 <!-- Main Exam Area -->
-<main class="pt-20 pb-28 px-4 md:px-8 bg-gray-50 transition-all duration-300">
+<main class="pt-28 md:pt-24 pb-28 px-4 md:px-8 bg-gray-50 transition-all duration-300">
     <div
         class="bg-white rounded-xl shadow-md border border-gray-100 p-6 md:p-10 animate-fade-in space-y-8 max-w-7xl mx-auto">
         <div class="flex justify-between items-center">
             <h2 class="text-lg md:text-xl font-semibold text-gray-800">
-                Question {{ currentQuestionIndex() + 1 }}
+                Question {{ currentQuestion.number }}
             </h2>
             <span class="text-sm text-gray-500">
-                {{ getAnsweredSubparts(currentQuestion) }}
+                Answered: {{ getAnsweredSubparts(currentQuestion) }}
             </span>
         </div>
 
@@ -31,8 +54,12 @@
             @for (sp of currentQuestion.subparts; track sp.id) {
             <div class="space-y-3">
                 <div>
-                    <div class="text-sm font-semibold text-gray-700 mb-1">{{ sp.label }}</div>
-                    <div class="text-gray-700 text-sm md:text-base">{{ sp.question }}</div>
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="text-sm font-semibold text-gray-700">{{ sp.label }}</div>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{{ sp.marks }} marks</span>
+                    </div>
+                    <div class="text-gray-700 text-sm md:text-base prose prose-sm max-w-none" [innerHTML]="sp.question">
+                    </div>
                 </div>
 
                 <!-- ngx-editor -->
@@ -53,19 +80,23 @@
     class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm px-4 md:px-8 py-3 flex justify-between items-center z-40">
     <button (click)="prevQuestion()" [disabled]="currentQuestionIndex() === 0"
         class="text-gray-600 hover:text-gray-900 font-medium text-sm disabled:opacity-40 transition">
-        Previous
+        ← Previous
     </button>
 
-    <div class="flex items-center gap-2 overflow-x-auto">
+    <div class="flex items-center gap-2 overflow-x-auto max-w-md">
         @for (q of questions(); track i; let i = $index) {
         <button (click)="goToQuestion(i)"
-            class="relative px-3 py-1 rounded-lg text-sm font-medium border transition-all" [ngClass]="{
-        'bg-blue-600 text-white border-blue-600': currentQuestionIndex() === i,
-        'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200':
-          currentQuestionIndex() !== i
-      }">
-            Q{{ i + 1 }}
-            <span class="absolute -top-2 -right-2 text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full">
+            class="relative px-3 py-1 rounded-lg text-sm font-medium border transition-all whitespace-nowrap" [ngClass]="{
+                    'bg-blue-600 text-white border-blue-600': currentQuestionIndex() === i,
+                    'bg-green-50 text-green-700 border-green-200': currentQuestionIndex() !== i && isQuestionAnswered(i),
+                    'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200': currentQuestionIndex() !== i && !isQuestionAnswered(i)
+                }">
+            Q{{ q.number }}
+            <span class="absolute -top-2 -right-2 text-[10px] px-1.5 py-0.5 rounded-full" [ngClass]="{
+                    'bg-blue-100 text-blue-600': currentQuestionIndex() === i,
+                    'bg-green-100 text-green-600': currentQuestionIndex() !== i && isQuestionAnswered(i),
+                    'bg-gray-200 text-gray-600': currentQuestionIndex() !== i && !isQuestionAnswered(i)
+                }">
                 {{ getAnsweredSubparts(q) }}
             </span>
         </button>
@@ -74,6 +105,7 @@
 
     <button (click)="nextQuestion()" [disabled]="currentQuestionIndex() === questions().length - 1"
         class="text-gray-600 hover:text-gray-900 font-medium text-sm disabled:opacity-40 transition">
-        Next
+        Next →
     </button>
 </footer>
+}

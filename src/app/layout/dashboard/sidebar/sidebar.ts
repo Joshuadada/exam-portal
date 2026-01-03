@@ -2,6 +2,7 @@
 import { Component, Input, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { sidebarOpen, toggleSidebar } from '../../../core/state/ui.store';
+import { UtilsService } from '../../../core/services/shared/utils/utils.service';
 
 interface NavItem {
   label: string;
@@ -19,10 +20,10 @@ export class Sidebar {
   sidebarOpen = sidebarOpen;
   toggleSidebar = toggleSidebar;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private utilsService: UtilsService) {}
   @Input({required: true}) navItems: NavItem[] = [];
 
   logout() {
-    this.router.navigate(['/logout']);
+    this.utilsService.logout()
   }
 }

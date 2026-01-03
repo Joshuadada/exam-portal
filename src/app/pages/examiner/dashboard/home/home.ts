@@ -1,41 +1,92 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { Dashboard } from '../../../../core/services/examiner/dashboard/dashboard';
+import { Subject, takeUntil } from 'rxjs';
+import { AlertService } from '../../../../core/services/shared/alert/alert.service';
+import { ExamType } from '../../../../core/types/exam.type';
+import { Router } from '@angular/router';
+import { MinutesToHoursPipe } from "../../../../core/pipes/minutes-to-hours-pipe";
+
+type RecentExams = {
+  id: string,
+  title: string,
+  courseCode: string,
+  creatorId: string,
+  examinerName: string,
+  duration: number,
+  examDate: string,
+  totalMarks: number,
+  createdAt: string
+}
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, MinutesToHoursPipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {
+export class Home implements OnInit {
+  private dashboardService = inject(Dashboard);
+  private alertService = inject(AlertService);
+  private router = inject(Router)
+  private destroy$ = new Subject<void>();
+
+  user = JSON.parse(localStorage.getItem('user') || '{}')
+  examinerName = this.user.full_name || 'Lecturer'
+  recentExams: ExamType[] = []
+
   summaryCards = [
-    { label: 'Total Exams', value: 12, icon: 'fas fa-book' },
-    { label: 'Active Exams', value: 4, icon: 'fas fa-play-circle' },
-    { label: 'Pending Reviews', value: 3, icon: 'fas fa-tasks' },
-    { label: 'Students', value: 128, icon: 'fas fa-users' },
+    { label: 'Total Exams', value: 0, icon: 'fas fa-book' },
+    { label: 'Students', value: 0, icon: 'fas fa-users' },
   ];
 
-  recentExams = [
-    {
-      title: 'Object-Oriented Programming',
-      duration: '1 hr',
-      attempts: 56,
-      status: 'Active',
-      date: 'Nov 5, 2025',
-    },
-    {
-      title: 'Database Systems',
-      duration: '45 mins',
-      attempts: 43,
-      status: 'Draft',
-      date: 'Nov 2, 2025',
-    },
-    {
-      title: 'Software Engineering Principles',
-      duration: '1 hr 30 mins',
-      attempts: 71,
-      status: 'Closed',
-      date: 'Oct 28, 2025',
-    },
-  ];
+  ngOnInit() {
+    this.getRecentExams();
+    this.getDashboardData();
+  }
+
+  getRecentExams() {
+    this.dashboardService
+      .getExaminerRecentExams()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.recentExams = res.data || []
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Recent exam API error:', err);
+        },
+      });
+  }
+
+  getDashboardData() {
+    this.dashboardService
+      .getExaminerDashboardData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.summaryCards = [
+              { label: 'Total Exams', value: res.data?.examCount || 0, icon: 'fas fa-book' },
+              { label: 'Enrolled Students', value: res.data?.studentCount || 0, icon: 'fas fa-users' },
+            ];
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Recent exam API error:', err);
+        },
+      });
+  }
+
+  viewAll() {
+    this.router.navigate(['/examiner/exams'])
+  }
 }
