@@ -10,7 +10,7 @@
           formGrp.controls[formCtrlName].invalid &&
           formGrp.controls[formCtrlName].touched
       }" [name]="name">
-        <option *ngFor="let opt of options; let i = index" [value]="opt.value" [selected]="i === 0">
+        <option *ngFor="let opt of options; let i = index" [value]="opt.value">
             {{ opt.label }}
         </option>
     </select>

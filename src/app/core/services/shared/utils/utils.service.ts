@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, finalize, map } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -8,36 +7,12 @@ import { Router } from '@angular/router';
 })
 export class UtilsService {
   private readonly accessTokenKey = 'exam-portal-access-token';
-  private readonly refreshTokenKey = 'exam-portal-refresh-token';
   private isClearing = false;
 
-  private authService = inject(AuthService);
   private router = inject(Router);
-
-  private decodedTokenSubject = new BehaviorSubject<any | null>(this.getDecodedToken());
-  decodedToken$ = this.decodedTokenSubject.asObservable();
-
-  // ================================
-  // 🔹 TOKEN MANAGEMENT
-  // ================================
 
   getToken(): string | null {
     return localStorage.getItem(this.accessTokenKey);
-  }
-
-  getRefreshToken(): string | null {
-    return localStorage.getItem(this.refreshTokenKey);
-  }
-
-  setTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem(this.accessTokenKey, accessToken);
-    localStorage.setItem(this.refreshTokenKey, refreshToken);
-    this.decodedTokenSubject.next(this.getDecodedToken());
-  }
-
-  updateToken(accessToken: string): void {
-    localStorage.setItem(this.accessTokenKey, accessToken);
-    this.decodedTokenSubject.next(this.getDecodedToken());
   }
 
   clearTokens(): void {
@@ -45,8 +20,6 @@ export class UtilsService {
     this.isClearing = true;
 
     localStorage.removeItem(this.accessTokenKey);
-    localStorage.removeItem(this.refreshTokenKey);
-    this.decodedTokenSubject.next(null);
 
     this.isClearing = false;
   }
@@ -86,9 +59,4 @@ export class UtilsService {
     localStorage.removeItem('user')
     this.router.navigate(['/login'])
   }
-
-  isLoggedIn$ = this.decodedToken$.pipe(
-    map((decoded) => !!decoded && !this.isTokenExpired(decoded)),
-    distinctUntilChanged()
-  );
 }

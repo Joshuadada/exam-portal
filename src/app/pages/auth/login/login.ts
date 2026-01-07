@@ -45,12 +45,12 @@ export class Login {
         next: (res) => {
           if (res.isSuccessful === true) {
             const accessToken = res?.data?.access_token as string;
-            const refreshToken = res?.data?.refreshToken as string;
-
-            this.utilsService.setTokens(accessToken, refreshToken);
 
             this.alertService.success(res?.message);
+
+            localStorage.setItem('exam-portal-access-token', accessToken)
             localStorage.setItem('user', JSON.stringify(res?.data?.user))
+            
             if(res?.data?.user?.role === 'student') {
               this.router.navigate(['/student'])
             } else {
