@@ -184,8 +184,5 @@ export class EditExam {
         };
       }),
     };
-
-    console.log('Exam Created:', payload);
-    alert('Exam created successfully!');
   }
 }

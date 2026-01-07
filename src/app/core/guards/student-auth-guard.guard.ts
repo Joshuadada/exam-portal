@@ -15,7 +15,6 @@ export class StudentAuthGuard implements CanActivate {
     canActivate(): boolean {
         const token = this.utils.getToken();
         const role: 'student' | 'examiner' = this.user?.role
-        console.log(role)
 
         if (!token) {
             this.utils.logout();

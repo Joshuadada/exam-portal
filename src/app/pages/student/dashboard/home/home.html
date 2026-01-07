@@ -1,78 +1,61 @@
 <div class="bg-gray-50 transition-all">
-    <!-- Greeting -->
-    <div
-      class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 animate-fade-in-down"
-    >
-      Welcome back, <span class="text-blue-600">Student!</span>
-    </div>
-  
-    <!-- Stats Grid -->
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 animate-fade-in-up"
-    >
-      <!-- Total Exams -->
-      <div
-        class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-all duration-300 border border-gray-100"
-      >
-        <div class="text-sm text-gray-500">Total Exams</div>
-        <div class="text-2xl font-semibold text-gray-800 mt-1">
-          {{ totalExamsCount() }}
-        </div>
-      </div>
-  
-      <!-- Completed -->
-      <div
-        class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-all duration-300 border border-gray-100"
-      >
-        <div class="text-sm text-gray-500">Total Attempted Exams</div>
-        <div class="text-2xl font-semibold text-green-600 mt-1">
-          {{ attemptedExamsCount() }}
-        </div>
-      </div>
-  
-      <!-- Average Score -->
-      <div
-        class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-all duration-300 border border-gray-100"
-      >
-        <div class="text-sm text-gray-500">Average Score</div>
-        <div class="text-2xl font-semibold text-blue-600 mt-1">
-          {{ averageScoreCount() }}
-        </div>
+  <!-- Greeting -->
+  <div class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 animate-fade-in-down">
+    Welcome back, <span class="text-blue-600">{{user?.fullName || 'Student!'}}</span>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 animate-fade-in-up">
+    <!-- Total Exams -->
+    <div class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-all duration-300 border border-gray-100">
+      <div class="text-sm text-gray-500">Total Exams</div>
+      <div class="text-2xl font-semibold text-gray-800 mt-1">
+        {{ totalExamsCount() }}
       </div>
     </div>
-  
-    <!-- Recent Exams Section -->
-    <div class="animate-fade-in-up delay-200">
-      <h2 class="text-xl font-semibold text-gray-800 mb-3">Recent Exams</h2>
-      <div class="bg-white rounded-2xl p-4 shadow border border-gray-100">
-        <div class="flex flex-col divide-y divide-gray-100">
-          <div
-            class="flex justify-between items-center py-3 hover:bg-gray-50 px-2 rounded-lg transition"
-          >
-            <div>
-              <div class="font-medium text-gray-800">Computer Science 301</div>
-              <div class="text-sm text-gray-500">Completed • Score: 88%</div>
-            </div>
-            <span
-              class="text-green-600 text-xs font-medium bg-green-50 px-3 py-1 rounded-full"
-              >Passed</span
-            >
-          </div>
-  
-          <div
-            class="flex justify-between items-center py-3 hover:bg-gray-50 px-2 rounded-lg transition"
-          >
-            <div>
-              <div class="font-medium text-gray-800">Software Engineering 202</div>
-              <div class="text-sm text-gray-500">Pending • Starts in 2 days</div>
-            </div>
-            <span
-              class="text-yellow-600 text-xs font-medium bg-yellow-50 px-3 py-1 rounded-full"
-              >Upcoming</span
-            >
-          </div>
-        </div>
+
+    <!-- Completed -->
+    <div class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-all duration-300 border border-gray-100">
+      <div class="text-sm text-gray-500">Total Attempted Exams</div>
+      <div class="text-2xl font-semibold text-green-600 mt-1">
+        {{ attemptedExamsCount() }}
+      </div>
+    </div>
+
+    <!-- Average Score -->
+    <div class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-all duration-300 border border-gray-100">
+      <div class="text-sm text-gray-500">Average Score</div>
+      <div class="text-2xl font-semibold text-blue-600 mt-1">
+        {{ averageScoreCount() }}
       </div>
     </div>
   </div>
-  
+
+  <!-- Recent Result Section -->
+  <div class="animate-fade-in-up delay-200">
+    <h2 class="text-xl font-semibold text-gray-800 mb-3">Recent Results</h2>
+    <div class="bg-white rounded-2xl p-4 shadow border border-gray-100">
+
+      @if (recentResults.length > 0) {
+      <div class="flex flex-col divide-y divide-gray-100">
+        @for (result of recentResults; track result) {
+        <div class="flex justify-between items-center py-3 hover:bg-gray-50 px-2 rounded-lg transition">
+          <div>
+            <div class="font-medium text-gray-800">{{result?.examTitle}}</div>
+            <div class="text-sm text-gray-500">Completed • Score: {{result?.percentage}}%</div>
+          </div>
+          <span class="text-green-600 text-xs font-medium bg-green-50 px-3 py-1 rounded-full">{{result?.status ===
+            'PASS' ? 'Passed' : 'Failed' }}</span>
+        </div>
+        }
+      </div>
+      }
+      @else {
+      <div class="text-center py-10 text-gray-500">
+        <i class="fas fa-folder-open text-3xl text-gray-400 mb-3"></i>
+        <p class="text-sm">No recent results available.</p>
+      </div>
+      }
+    </div>
+  </div>
+</div>

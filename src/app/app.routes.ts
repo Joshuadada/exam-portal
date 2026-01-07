@@ -51,18 +51,18 @@ export const routes: Routes = [
                     ).then((m) => m.ExamInstruction),
             },
             {
-                path: 'exams/result',
-                loadComponent: () =>
-                    import(
-                        './pages/student/dashboard/exams/exam-result/exam-result'
-                    ).then((m) => m.ExamResult),
-            },
-            {
                 path: 'results',
                 loadComponent: () =>
                     import('./pages/student/dashboard/results/results').then(
                         (m) => m.Results
                     ),
+            },
+            {
+                path: 'results/:id',
+                loadComponent: () =>
+                    import(
+                        './pages/student/dashboard/results/exam-result/exam-result'
+                    ).then((m) => m.ExamResult),
             },
             {
                 path: 'profile',
@@ -116,9 +116,16 @@ export const routes: Routes = [
                     import('./pages/examiner/dashboard/result/result').then((m) => m.Result),
             },
             {
-                path: 'results/details',
+                path: 'results/details/:id',
                 loadComponent: () =>
                     import('./pages/examiner/dashboard/result/result-details/result-details').then((m) => m.ResultDetails),
+            },
+            {
+                path: 'profile',
+                loadComponent: () =>
+                    import('./pages/examiner/dashboard/profile/profile').then(
+                        (m) => m.Profile
+                    ),
             },
         ],
         canActivate: [ExaminerAuthGuard],

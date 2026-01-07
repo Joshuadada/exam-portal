@@ -8,6 +8,7 @@
     </div>
 
     <!-- Results Table -->
+    @if (results.length > 0) {
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-auto">
         <table class="w-full border-collapse">
             <thead class="bg-gray-100 text-gray-700 text-sm">
@@ -25,13 +26,13 @@
             </thead>
             <tbody>
                 @for (result of results; track $index) {
-                    <tr class="border-b hover:bg-gray-50 transition">
-                    <td class="p-4 text-gray-800 font-medium">{{ result.name }}</td>
-                    <td class="p-4">{{ result.matricNo }}</td>
-                    <td class="p-4">{{ result.courseCode }}</td>
-                    <td class="p-4">{{ result.courseTitle }}</td>
-                    <td class="p-4">{{ result.ExamDate }}</td>
-                    <td class="p-4">{{ result.score }}%</td>
+                <tr class="border-b hover:bg-gray-50 transition">
+                    <td class="p-4 text-gray-800 font-medium">{{ result?.fullName }}</td>
+                    <td class="p-4">{{ result?.identity }}</td>
+                    <td class="p-4">{{ result?.courseCode }}</td>
+                    <td class="p-4">{{ result.examTitle }}</td>
+                    <td class="p-4">{{ result.examDate | date}}</td>
+                    <td class="p-4">{{ result.percentage }}%</td>
                     <td class="p-4">{{ result.grade }}</td>
                     <td class="p-4">
                         <span [ngClass]="{
@@ -42,15 +43,26 @@
                         </span>
                     </td>
                     <td class="p-4 text-center">
-                        <button (click)="viewDetails(result)"
+                        <button (click)="viewDetails(result.submissionId)"
                             class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition">
                             View Details
                         </button>
                     </td>
                 </tr>
                 }
-                
+
             </tbody>
         </table>
     </div>
+    } @else {
+        <!-- Empty State -->
+    <div
+    class="text-center py-20 text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-200"
+    >
+    <i class="fas fa-folder-open text-5xl text-gray-400 mb-4"></i>
+    <p class="text-lg font-medium mb-2">No student submission available yet.</p>
+    
+  </div>
+    }
+
 </div>

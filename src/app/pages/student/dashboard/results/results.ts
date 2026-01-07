@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AlertService } from '../../../../core/services/shared/alert/alert.service';
+import { Result } from '../../../../core/services/student/result/result';
+import { Subject, takeUntil } from 'rxjs';
+import { ResultSummaryType } from '../../../../core/types/result.type';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,62 +14,47 @@ import { Router } from '@angular/router';
   styleUrl: './results.scss',
 })
 export class Results {
+  private alertService = inject(AlertService)
+  private resultService = inject(Result)
+  private router = inject(Router);
+  private destroy$ = new Subject<void>();
+
+  examId: string = ''
   circumference = 2 * Math.PI * 40;
 
   searchTerm = '';
   selectedFilter = 'all';
 
-  results = [
-    {
-      examTitle: 'Object-Oriented Programming',
-      score: 85,
-      grade: 'A',
-      status: 'Passed',
-      dateTaken: '2025-10-10',
-      scoreColor: '#10B981'
-    },
-    {
-      examTitle: 'Database Systems',
-      score: 62,
-      grade: 'C',
-      status: 'Passed',
-      dateTaken: '2025-09-25',
-      scoreColor: '#3B82F6'
-    },
-    {
-      examTitle: 'Software Engineering Principles',
-      score: 48,
-      grade: 'F',
-      status: 'Failed',
-      dateTaken: '2025-08-14',
-      scoreColor: '#EF4444'
-    }
-  ];
+  results: ResultSummaryType[] = [];
 
-  filteredResults = [...this.results];
+  ngOnInit(): void {
+    this.getStudentResults();
+  }
 
-  constructor(private router: Router) { }
+  getStudentResults(): void {
+    this.resultService.getStudentResults()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.results = res.data || []
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Exam API error:', err);
+        },
+      });
+  }
 
   getDashOffset(score: number) {
     const progress = (score / 100) * this.circumference;
     return this.circumference - progress;
   }
 
-  filterResults() {
-    this.filteredResults = this.results.filter((r) => {
-      const matchesSearch =
-        r.examTitle.toLowerCase().includes(this.searchTerm.toLowerCase());
-
-      const matchesFilter =
-        this.selectedFilter === 'all' ||
-        (this.selectedFilter === 'passed' && r.status === 'Passed') ||
-        (this.selectedFilter === 'failed' && r.status === 'Failed');
-
-      return matchesSearch && matchesFilter;
-    });
-  }
-
-  viewDetails(result: any) {
-    this.router.navigate(['/student/exams/result']);
+  viewDetails(submissionId: string) {
+    this.router.navigate(['/student/results', submissionId]);
   }
 }

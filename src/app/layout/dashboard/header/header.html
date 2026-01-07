@@ -11,16 +11,16 @@
     <!-- Right Section -->
     <div class="flex items-center gap-4">
         <!-- Notification -->
-        <button class="relative hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full transition">
+        <!-- <button class="relative hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full transition">
             <i class="fas fa-bell text-gray-600 text-base"></i>
             <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-        </button>
+        </button> -->
 
         <!-- Profile -->
         <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-lg">
-            <img src="https://ui-avatars.com/api/?name=Student&background=0D8ABC&color=fff" alt="User"
+            <img src="https://ui-avatars.com/api/?background=0D8ABC&color=fff" alt="User"
                 class="w-8 h-8 rounded-full" />
-            <span class="hidden md:block font-medium text-gray-700">Student</span>
+            <span class="hidden md:block font-medium text-gray-700">{{user.fullName || 'User'}}</span>
         </div>
     </div>
 </header>

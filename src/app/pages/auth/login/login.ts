@@ -36,6 +36,7 @@ export class Login {
 
   login(): void {
     if (this.loginForm.invalid) return;
+    localStorage.clear()
 
     this.authService
       .login(this.loginForm.value)

@@ -1,26 +1,42 @@
+@if (resultData) {
 <div class="flex flex-col items-center animate-fadeIn">
     <!-- Header -->
     <div
         class="w-full bg-white/70 backdrop-blur-md shadow-md rounded-md p-8 mb-8 border border-gray-100 transition-transform duration-500 hover:scale-[1.01]">
         <h1 class="text-lg md:text-xl font-bold text-slate-800 mb-3">
-            CSC 204 Results
+            {{resultData.examTitle ? resultData.examTitle : ''}} {{resultData.courseCode ?
+            `(${resultData.courseCode})` : ''}} Results
         </h1>
         <p class="text-gray-500 text-sm">
-            Well done, {{ studentName }}! Here’s how you performed in your exam.
+            Well done, {{ user?.fullName || "Student" }}! Here’s how you performed in your exam.
         </p>
     </div>
 
     <!-- Summary Stats -->
-    <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        @for (card of summaryCards; track card) {
+    <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         <div
             class="p-6 rounded-md shadow bg-white border border-gray-100 text-center hover:shadow-md transition-transform hover:-translate-y-1 animate-slideInUp">
-            <div class="text-sm text-gray-500">{{ card.label }}</div>
-            <div class="text-lg font-bold mt-2" [ngClass]="card.color">
-                {{ card.value }}
+            <div class="text-sm text-gray-500">Total Score</div>
+            <div class="text-lg font-bold mt-2 text-blue-600">
+                {{ `${resultData.studentTotalScore}/${resultData.totalMaxScore}` }}
             </div>
         </div>
-        }
+
+        <div
+            class="p-6 rounded-md shadow bg-white border border-gray-100 text-center hover:shadow-md transition-transform hover:-translate-y-1 animate-slideInUp">
+            <div class="text-sm text-gray-500">Grade</div>
+            <div class="text-lg font-bold mt-2 text-yellow-600">
+                {{ resultData.grade }}
+            </div>
+        </div>
+
+        <div
+            class="p-6 rounded-md shadow bg-white border border-gray-100 text-center hover:shadow-md transition-transform hover:-translate-y-1 animate-slideInUp">
+            <div class="text-sm text-gray-500">Status</div>
+            <div class="text-lg font-bold mt-2 text-green-600">
+                {{ resultData.status }}
+            </div>
+        </div>
     </div>
 
     <!-- Score Ring -->
@@ -34,33 +50,10 @@
                     class="transition-all duration-1000 ease-in-out"></circle>
             </svg>
             <div class="absolute inset-0 flex items-center justify-center text-xl font-bold text-slate-700">
-                {{ result.score }}%
+                {{ resultData.percentage || 0 }}%
             </div>
         </div>
         <p class="mt-4 text-gray-500">Total Score</p>
-    </div>
-
-    <!-- Breakdown -->
-    <div class="w-full bg-white rounded-md shadow-md p-8 border border-gray-100 mb-10 animate-slideInUp">
-        <h2 class="text-lg font-semibold text-slate-800 mb-6">
-            Question Breakdown
-        </h2>
-
-        <div class="flex flex-wrap gap-4">
-            @for (stat of result.breakdown; track stat) {
-            <div class="flex items-center gap-3 px-4 py-2 rounded-xl border bg-gray-50">
-                <span class="w-3 h-3 rounded-full" [ngClass]="{
-                'bg-green-500': stat.type === 'Correct',
-                'bg-red-500': stat.type === 'Wrong',
-                'bg-gray-400': stat.type === 'Unanswered'
-              }"></span>
-                <p class="text-gray-700">
-                    {{ stat.type }}:
-                    <span class="font-semibold">{{ stat.count }}</span>
-                </p>
-            </div>
-            }
-        </div>
     </div>
 
     <!-- Detailed Review -->
@@ -70,7 +63,7 @@
         </h2>
 
         <div class="space-y-4">
-            @for (group of result.questions; track group; let i = $index) {
+            @for (question of resultData.questions; track question; let i = $index) {
             <div class="border border-gray-100 rounded-md bg-gray-50 hover:bg-white transition-all hover:shadow-md"
                 [style.animationDelay]="i * 0.05 + 's'">
                 <!-- Accordion Header -->
@@ -78,7 +71,7 @@
                     (click)="toggleAccordion(i)">
                     <div>
                         <h3 class="text-base font-semibold text-gray-800">
-                            Question {{ i + 1 }}
+                            Question {{ question.number }}
                         </h3>
                         <p class="text-gray-500 text-sm">Includes subparts</p>
                     </div>
@@ -94,39 +87,31 @@
                 <div class="overflow-hidden transition-all duration-500"
                     [style.maxHeight]="activeIndex === i ? '1000px' : '0px'">
                     <div class="px-6 pb-6 space-y-6">
-                        @for (sub of group.subQuestions; track sub; let j = $index) {
+                        @for (sub of question.subQuestions; track sub; let j = $index) {
                         <div class="border border-gray-200 rounded-lg bg-gray-50 p-4 hover:bg-gray-100 transition">
                             <div class="flex justify-between items-center mb-2">
                                 <h4 class="text-sm font-semibold text-gray-800">
-                                    ({{ group.label }}{{ sub.subPart }}) {{ sub.text }}
+                                    ({{ question.number }}{{ sub.label }}) <span [innerHTML]="sub.questionText"></span>
                                 </h4>
-                                <span class="text-xs px-3 py-1 rounded-full font-medium" [ngClass]="{
-                          'bg-green-100 text-green-700': sub.isCorrect,
-                          'bg-red-100 text-red-700': !sub.isCorrect
-                        }">
-                                    {{ sub.isCorrect ? 'Correct' : 'Incorrect' }}
+                                <span class="text-xs px-3 py-1 rounded-full font-medium bg-green-100 text-green-700">
+                                    {{ `${sub.awardedMark}/${sub.maxMark}` }}
                                 </span>
                             </div>
 
-                            <div class="bg-gray-100 p-3 rounded-xl text-sm mb-2">
+                            <div class="bg-green-50 p-3 rounded-xl text-sm mb-2">
                                 <strong>Your Answer:</strong>
-                                <div [ngClass]="{
-                          'text-green-700': sub.isCorrect,
-                          'text-red-700': !sub.isCorrect
-                        }">
-                                    {{ sub.answer }}
-                                </div>
+                                <div class="text-green-700 text-justify" [innerHTML]="sub.answerText"></div>
                             </div>
 
-                            <div class="bg-green-50 p-3 rounded-xl text-sm mb-2">
+                            <div class="bg-yellow-50 p-3 rounded-xl text-sm mb-2">
                                 <strong>Expected Answer:</strong>
-                                <div class="text-green-700">{{ sub.correctAnswer }}</div>
+                                <div class="text-yellow-700 text-justify" [innerHTML]="sub.markingGuide"></div>
                             </div>
 
                             @if (sub.feedback) {
                             <div class="bg-blue-50 p-3 rounded-xl text-sm">
                                 <strong>Instructor Feedback:</strong>
-                                <div class="text-blue-700">{{ sub.feedback }}</div>
+                                <div class="text-blue-700 text-justify" [innerHTML]="sub.feedback"></div>
                             </div>
                             }
                         </div>
@@ -138,22 +123,20 @@
         </div>
     </div>
 
-    <!-- Instructor Feedback -->
-    <div class="w-full bg-white rounded-md shadow-md p-8 border border-gray-100 mb-10 animate-slideInUp">
-        <h2 class="text-lg font-semibold text-slate-800 mb-4">
-            Overall Feedback
-        </h2>
-        <p class="text-gray-700 leading-relaxed">
-            {{ result.feedback }}
-        </p>
-    </div>
-
     <!-- CTA Buttons -->
     <div class="flex justify-center gap-4 animate-fadeInSlow">
         <button
             class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-full shadow transition-transform hover:-translate-y-0.5"
-            (click)="goToDashboard()">
-            Back to Dashboard
+            (click)="goToResults()">
+            Back to Results
         </button>
     </div>
 </div>
+} @else {
+<!-- Empty State -->
+<div class="text-center py-20 text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+    <i class="fas fa-folder-open text-5xl text-gray-400 mb-4"></i>
+    <p class="text-lg font-medium mb-2">No result details available yet.</p>
+
+</div>
+}

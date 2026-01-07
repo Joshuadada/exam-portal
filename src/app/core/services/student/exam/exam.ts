@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../../types/api-response.type';
 import { CreateExamType, ExamType } from '../../../types/exam.type';
+import { SubmitType } from '../../../types/submit.type';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +20,9 @@ export class Exam {
     );
   }
 
-  submitExam(payload: CreateExamType): Observable<ApiResponse<any>> {
+  submitExam(payload: SubmitType): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(
-      `${this.baseUrl}/exams`,
+      `${this.baseUrl}/submit`,
       payload,
     );
   }
@@ -35,12 +36,6 @@ export class Exam {
   getExamMetaById(id: string): Observable<ApiResponse<Partial<ExamType>>> {
     return this.http.get<ApiResponse<Partial<ExamType>>>(
       `${this.baseUrl}/exams/meta/${id}`
-    );
-  }
-
-  deleteExam(id: string): Observable<ApiResponse<any>> {
-    return this.http.delete<ApiResponse<any>>(
-      `${this.baseUrl}/exams/${id}`
     );
   }
 }

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { identity, Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { AlertService } from '../../../core/services/shared/alert/alert.service';
 import { UtilsService } from '../../../core/services/shared/utils/utils.service';
@@ -34,7 +34,7 @@ export class Register {
       fullName: new FormControl('', [Validators.required]),
       role: new FormControl('', [Validators.required]),
       department: new FormControl('', [Validators.required]),
-      studentId: new FormControl('', [Validators.required]),
+      identity: new FormControl('', [Validators.required]),
     });
   }
 
@@ -44,10 +44,10 @@ export class Register {
     const payload = {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
-      full_name: this.registerForm.value.fullName,
+      fullName: this.registerForm.value.fullName,
       role: this.registerForm.value.role,
       department: this.registerForm.value.department,
-      student_id: this.registerForm.value.studentId
+      identity: this.registerForm.value.identity
     }
 
     this.authService
@@ -70,7 +70,7 @@ export class Register {
         },
         error: (err) => {
           this.alertService.error(err?.error?.message || 'An error occurred');
-          console.error('Login API error:', err);
+          console.error('Register API error:', err);
         },
       });
   }

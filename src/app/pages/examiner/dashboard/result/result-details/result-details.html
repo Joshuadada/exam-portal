@@ -1,3 +1,4 @@
+@if (resultData) {
 <div class="min-h-screen bg-gray-50">
   <!-- Breadcrumb / Back -->
   <div class="mb-6">
@@ -13,119 +14,107 @@
   <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-xl md:text-2xl font-semibold text-gray-800">
-          {{ examMeta.title }}
-        </h1>
+        <h1 class="text-xl md:text-2xl font-semibold text-gray-800" [innerHTML]="resultData.examTitle"></h1>
         <div class="text-sm text-gray-500 mt-1">
-          <span class="mr-3"><strong>{{ examMeta.courseCode }}</strong></span>
-          <span class="mr-3">• {{ examMeta.date }}</span>
-          <span>• {{ examMeta.duration }}</span>
+          <span class="mr-3"><strong>{{ resultData.courseCode }}</strong></span>
+          <span class="mr-3">• {{ resultData.examDate | date }}</span>
+          <span>• {{ resultData.examDuration | minutesToHours }}</span>
         </div>
       </div>
 
       <div class="flex items-center gap-6">
         <div class="text-right">
           <div class="text-sm text-gray-500">Total Score</div>
-          <div class="text-2xl font-bold text-gray-800">{{ totalScore }} / {{ maxTotal }}</div>
+          <div class="text-2xl font-bold text-gray-800">{{ resultData.studentTotalScore }} / {{ resultData.totalMaxScore
+            }}</div>
         </div>
 
         <div class="text-right">
           <div class="text-sm text-gray-500">Percentage</div>
-          <!-- <div class="text-2xl font-bold text-gray-800">
-          {{ maxTotal ? Math.round((totalScore / maxTotal) * 100) : 0 }}%
-        </div> -->
-      </div>
+          <div class="text-2xl font-bold text-gray-800">
+            {{ resultData.percentage || 0 }}%
+          </div>
+        </div>
 
-      <div class="px-4 py-2 rounded-full text-sm font-semibold"
-        [ngClass]="status === 'Passed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
-        {{ status }} • Grade {{ grade }}
+        <div class="px-4 py-2 rounded-full text-sm font-semibold"
+          [ngClass]="resultData.status === 'Passed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+          {{ resultData.status }} • Grade {{ resultData.grade }}
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Main layout: Left = answers, Right = student card & summary -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  <!-- Left: Answers & LLM feedback (2/3 width on lg) -->
-  <div class="lg:col-span-2 space-y-6">
-    @for (q of questions; track q) {
+  <!-- Main layout: Left = answers, Right = student card & summary -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left: Answers & LLM feedback (2/3 width on lg) -->
+    <div class="lg:col-span-2 space-y-6">
+      @for (q of resultData.questions; track q) {
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-4 bg-gray-50 border-b">
           <h3 class="text-lg font-semibold text-gray-800">Question {{ q.number }}</h3>
         </div>
         <div class="p-6 space-y-6">
           @for (sub of q.subQuestions; track sub) {
-            <div class="border rounded-lg p-4 bg-white">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <div class="text-sm text-gray-500 mb-1">Subpart {{ sub.label }}</div>
-                  <div class="text-md font-medium text-gray-800 mb-3">{{ sub.text }}</div>
-                  <div class="prose max-w-none text-gray-700 mb-3">
-                    <div class="text-sm text-gray-500 font-semibold mb-1">Student’s Answer</div>
-                    <div class="p-3 bg-gray-50 rounded-md text-sm">{{ sub.studentAnswer }}</div>
-                  </div>
-                  <div class="prose max-w-none text-gray-700 mb-3">
-                    <div class="text-sm text-gray-500 font-semibold mb-1">LLM Review</div>
-                    <div
-                      class="p-3 rounded-md border-l-4 border-blue-200 bg-blue-50 text-sm text-gray-800">
-                      {{ sub.llmReview }}
-                    </div>
-                  </div>
+          <div class="border rounded-lg p-4 bg-white">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="text-sm text-gray-500 mb-1">Subpart {{ sub.label }}</div>
+                <div class="text-md font-medium text-gray-800 mb-3 text-justify" [innerHTML]="sub.questionText"></div>
+                <div class="prose max-w-none text-gray-700 mb-3">
+                  <div class="text-sm text-gray-500 font-semibold mb-1">Student’s Answer</div>
+                  <div class="p-3 bg-gray-50 rounded-md text-sm text-justify" [innerHTML]="sub.answerText"></div>
                 </div>
-                <div class="text-center flex-shrink-0">
-                  <div class="text-sm text-gray-500">Marks</div>
-                  <div class="mt-2 px-3 py-2 rounded-lg bg-gray-100 font-semibold text-gray-800">
-                    {{ sub.awardedMarks }} / {{ sub.maxMarks }}
-                  </div>
+                <div class="prose max-w-none text-gray-700 mb-3">
+                  <div class="text-sm text-gray-500 font-semibold mb-1">LLM Review</div>
+                  <div class="p-3 rounded-md border-l-4 border-blue-200 bg-blue-50 text-sm text-gray-800 text-justify"
+                    [innerHTML]="sub.feedback"></div>
+                </div>
+              </div>
+              <div class="text-center flex-shrink-0">
+                <div class="text-sm text-gray-500">Marks</div>
+                <div class="mt-2 px-3 py-2 rounded-lg bg-gray-100 font-semibold text-gray-800">
+                  {{ sub.awardedMark }} / {{ sub.maxMark }}
                 </div>
               </div>
             </div>
+          </div>
           }
         </div>
       </div>
-    }
-  </div>
+      }
+    </div>
 
-  <!-- Right: Student card & quick actions -->
-  <aside class="space-y-6">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <div class="flex items-center gap-4">
-        <!-- <div
-        class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-lg">
-        {{ student.name.split(' ').map(n => n[0]).slice(0,2).join('') }}
-      </div> -->
-      <div>
-        <div class="font-semibold text-gray-800">{{ student.name }}</div>
-        <div class="text-sm text-gray-500">{{ student.matricNo }}</div>
-        <div class="text-sm text-gray-500">{{ student.department }}</div>
+    <!-- Right: Student card & quick actions -->
+    <aside class="space-y-6">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center gap-4">
+          <!-- <div
+          class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-lg">
+          {{ student.name.split(' ').map(n => n[0]).slice(0,2).join('') }}
+        </div> -->
+          <div>
+            <div class="font-semibold text-gray-800">{{ resultData.studentName }}</div>
+            <div class="text-sm text-gray-500">{{ resultData.identity }}</div>
+            <div class="text-sm text-gray-500">{{ resultData.studentDepartment }}</div>
+          </div>
+        </div>
+
+        <div class="mt-6 space-y-3">
+          <div class="text-sm text-gray-500">Exam Date</div>
+          <div class="font-medium text-gray-800">{{ resultData.examDate | date }}</div>
+
+          <div class="text-sm text-gray-500">Duration</div>
+          <div class="font-medium text-gray-800">{{ resultData.examDuration | minutesToHours }}</div>
+        </div>
       </div>
-    </div>
-
-    <div class="mt-6 space-y-3">
-      <div class="text-sm text-gray-500">Exam Date</div>
-      <div class="font-medium text-gray-800">{{ examMeta.date }}</div>
-
-      <div class="text-sm text-gray-500">Duration</div>
-      <div class="font-medium text-gray-800">{{ examMeta.duration }}</div>
-    </div>
+    </aside>
   </div>
-
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-    <div class="text-sm text-gray-500">LLM Overall Comment</div>
-    <div class="mt-2 text-sm text-gray-700">
-      The student demonstrates strong understanding of core concepts and provides relevant examples. Minor
-      elaboration required on runtime polymorphism.
-    </div>
-  </div>
-
-  <!-- <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-3">
-  <button class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">Approve
-  Result</button>
-  <button class="w-full px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition">Flag
-  for Review</button>
-  <button class="w-full px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
-  (click)="backToResults()">Back to exam results</button>
-</div> -->
-</aside>
 </div>
+} @else {
+<!-- Empty State -->
+<div class="text-center py-20 text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+  <i class="fas fa-folder-open text-5xl text-gray-400 mb-4"></i>
+  <p class="text-lg font-medium mb-2">No result details available yet.</p>
+
 </div>
+}

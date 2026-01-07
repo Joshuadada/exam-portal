@@ -9,5 +9,7 @@ import { toggleSidebar } from '../../../core/state/ui.store';
 })
 export class Header {
   toggleSidebar = toggleSidebar;
-  @Input({required: true}) portalName!: string
+  @Input({required: true}) portalName!: string;
+
+  user = JSON.parse(localStorage.getItem('user') || "{}")
 }

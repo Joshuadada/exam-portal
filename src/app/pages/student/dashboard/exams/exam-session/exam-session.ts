@@ -9,6 +9,7 @@ import { AlertService } from '../../../../../core/services/shared/alert/alert.se
 
 type Subpart = {
   id: string;
+  subQuestionId: string;
   label: string;
   question: string;
   answer: string;
@@ -33,6 +34,7 @@ type ExamData = {
   questions: Array<{
     number: number;
     subQuestions: Array<{
+      subQuestionId: string;
       label: string;
       questionText: string;
       marks: number;
@@ -53,6 +55,8 @@ export class ExamSession implements OnInit, OnDestroy {
   private examService = inject(Exam);
   private alertService = inject(AlertService);
   private destroy$ = new Subject<void>();
+
+  user = JSON.parse(localStorage.getItem('user') || "{}")
 
   timeRemaining = signal(60 * 60);
   currentQuestionIndex = signal(0);
@@ -75,7 +79,7 @@ export class ExamSession implements OnInit, OnDestroy {
 
   questions = signal<Question[]>([]);
 
-  private timerInterval?: number;
+  private timerInterval?: ReturnType<typeof setInterval>;
 
   constructor() {
     // Autosave effect
@@ -126,6 +130,7 @@ export class ExamSession implements OnInit, OnDestroy {
       id: qIndex + 1,
       number: q.number,
       subparts: q.subQuestions.map((sq) => ({
+        subQuestionId: sq.subQuestionId,
         id: `${q.number}${sq.label}`,
         label: `${q.number}${sq.label}`,
         question: sq.questionText,
@@ -256,17 +261,44 @@ export class ExamSession implements OnInit, OnDestroy {
   }
 
   submitExam() {
-    // TODO: Implement submit logic
-    const answers = this.questions().map((q) => ({
-      questionNumber: q.number,
-      subparts: q.subparts.map((sp) => ({
-        label: sp.label,
-        answer: sp.answer,
-      })),
-    }));
+    const subQuestions: {
+      subQuestionId: string,
+      answerText: string
+    }[] = []
+  
+    // Corrected: flatten all subparts into the array
+    this.questions().forEach((q) => {
+      q.subparts.forEach((sp) => {
+        subQuestions.push({
+          subQuestionId: sp.subQuestionId,
+          answerText: sp.answer
+        });
+      });
+    });
+  
+    const payload = {
+      examId: this.examId,
+      studentId: this.user.id,
+      answers: subQuestions
+    }
 
-    console.log('Exam answers:', answers);
-    localStorage.removeItem('examAnswers');
-    this.router.navigate(['/student/exams/result']);
+    this.examService
+      .submitExam(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.alertService.success(res?.message);
+            localStorage.removeItem('examAnswers');
+            this.router.navigate(['/student/results', res?.data?.id]);
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Submit Exam API error:', err);
+        },
+      });
   }
 }

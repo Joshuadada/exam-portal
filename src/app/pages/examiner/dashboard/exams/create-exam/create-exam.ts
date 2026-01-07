@@ -200,22 +200,20 @@ export class CreateExam implements OnInit, OnDestroy {
     };
 
     this.examService
-          .createExam(payload)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: (res) => {
-              if (res.isSuccessful === true) {
-                this.alertService.success(res?.message);
-              } else {
-                this.alertService.error(res?.message || res?.error || 'An error occurred');
-              }
-            },
-            error: (err) => {
-              this.alertService.error(err?.error?.message || 'An error occurred');
-              console.error('Login API error:', err);
-            },
-          });
-
-    console.log('Exam Created:', payload);
+      .createExam(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.alertService.success(res?.message);
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Create Exam API error:', err);
+        },
+      });
   }
 }

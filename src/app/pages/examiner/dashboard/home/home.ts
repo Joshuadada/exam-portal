@@ -32,7 +32,7 @@ export class Home implements OnInit {
   private destroy$ = new Subject<void>();
 
   user = JSON.parse(localStorage.getItem('user') || '{}')
-  examinerName = this.user.full_name || 'Lecturer'
+  examinerName = this.user.fullName || 'Lecturer'
   recentExams: ExamType[] = []
 
   summaryCards = [

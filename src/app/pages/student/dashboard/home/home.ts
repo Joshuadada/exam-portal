@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { AlertService } from '../../../../core/services/shared/alert/alert.service';
 import { Dashboard } from '../../../../core/services/student/dashboard/dashboard';
 import { Subject, takeUntil } from 'rxjs';
-import { ExamType } from '../../../../core/types/exam.type';
+import { ResultSummaryType } from '../../../../core/types/result.type';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +15,9 @@ export class Home implements OnInit {
   private dashboardService = inject(Dashboard);
   private destroy$ = new Subject<void>();
 
-  recentExams: ExamType[] = []
+  user = JSON.parse(localStorage.getItem('user') || "{}")
+
+  recentResults: ResultSummaryType[] = []
 
   // Animated signals
   totalExamsCount = signal(0);
@@ -23,18 +25,18 @@ export class Home implements OnInit {
   averageScoreCount = signal('');
 
   ngOnInit(): void {
-    this.getRecentExams();
+    this.getRecentResult();
     this.getDashboardData();
   }
 
-  getRecentExams() {
+  getRecentResult() {
     this.dashboardService
-      .getRecentExams()
+      .getRecentResults()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
           if (res.isSuccessful === true) {
-            this.recentExams = res.data || []
+            this.recentResults = res.data || []
           } else {
             this.alertService.error(res?.message || res?.error || 'An error occurred');
           }

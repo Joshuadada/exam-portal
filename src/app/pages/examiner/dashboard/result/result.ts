@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { ExaminerResultService } from '../../../../core/services/examiner/examiner-result-service/examiner-result-service';
+import { Subject, takeUntil } from 'rxjs';
+import { AlertService } from '../../../../core/services/shared/alert/alert.service';
+import { LecturerResultSummaryType } from '../../../../core/types/result.type';
 
 interface StudentResult {
   name: string;
@@ -21,23 +25,35 @@ interface StudentResult {
 })
 export class Result {
   private router = inject(Router)
-  
-  examSummary = {
-    title: 'Software Engineering Fundamentals',
-    date: 'October 5, 2025',
-    totalCandidates: 25,
-    averageScore: 78,
-    passRate: 80,
-  };
+  private resultService = inject(ExaminerResultService)
+  private alertService = inject(AlertService)
+  private destroy$ = new Subject<void>();
 
-  results: StudentResult[] = [
-    { name: 'John Doe', matricNo: "200667755", courseCode: "CSC 201", courseTitle:"Basics of Programing", ExamDate: "22/11/2025", score: 92, grade: 'A', status: 'Passed' },
-    { name: 'Jane Smith', matricNo: "200667755", courseCode: "CSC 201", courseTitle:"Basics of Programing", ExamDate: "22/11/2025", score: 75, grade: 'B', status: 'Passed' },
-    { name: 'David Okoro', matricNo: "200667755", courseCode: "CSC 201", courseTitle:"Basics of Programing", ExamDate: "22/11/2025", score: 48, grade: 'D', status: 'Failed' },
-    { name: 'Mary Johnson', matricNo: "200667755", courseCode: "CSC 201", courseTitle:"Basics of Programing", ExamDate: "22/11/2025", score: 85, grade: 'A', status: 'Passed' },
-  ];
+  results: LecturerResultSummaryType[] = [];
 
-  viewDetails(student: StudentResult) {
-    this.router.navigate(['/examiner/results/details'])
+  ngOnInit(): void {
+    this.getResults();
+  }
+
+  getResults(): void {
+    this.resultService.getLecturerStudentResults()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccessful === true) {
+            this.results = res.data || []
+          } else {
+            this.alertService.error(res?.message || res?.error || 'An error occurred');
+          }
+        },
+        error: (err) => {
+          this.alertService.error(err?.error?.message || 'An error occurred');
+          console.error('Exam API error:', err);
+        },
+      });
+  }
+
+  viewDetails(submissionId: string) {
+    this.router.navigate(['/examiner/results/details', submissionId])
   }
 }

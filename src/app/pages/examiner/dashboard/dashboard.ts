@@ -20,5 +20,6 @@ export class Dashboard {
     { label: 'Dashboard', icon: 'fas fa-home', route: '/examiner/home' },
     { label: 'Exams', icon: 'fas fa-file-alt', route: '/examiner/exams' },
     { label: 'Results', icon: 'fas fa-chart-line', route: '/examiner/results' },
+    { label: 'Profile', icon: 'fas fa-cog', route: '/examiner/profile' },
   ];  
 }
