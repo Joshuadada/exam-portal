@@ -9,5 +9,4 @@ import { Component, Input } from '@angular/core';
 })
 export class AuthLayout {
   thisYear = new Date().getFullYear();
-  @Input() portalName: 'student' | 'examiner' = "student";
 }
