@@ -22,7 +22,7 @@ export class Home implements OnInit {
   // Animated signals
   totalExamsCount = signal(0);
   attemptedExamsCount = signal(0);
-  averageScoreCount = signal('');
+  averageScoreCount = signal('0%');
 
   ngOnInit(): void {
     this.getRecentResult();
