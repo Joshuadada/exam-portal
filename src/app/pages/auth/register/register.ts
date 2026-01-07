@@ -57,7 +57,7 @@ export class Register {
       .subscribe({
         next: (res) => {
           if (res.isSuccessful === true) {
-            const accessToken = res?.data?.accessToken as string;
+            const accessToken = res?.data?.access_token as string;
             const refreshToken = res?.data?.refreshToken as string;
 
             this.utilsService.setTokens(accessToken, refreshToken);
