@@ -7,30 +7,32 @@
 
     <!-- Login Form -->
     <div class="flex flex-col gap-4">
-        <app-text-input [formGrp]="registerForm" name="Email" formCtrlName="email" [placeholder]="'Email'" [type]="'email'"
-            label="Email" [required]="true"
+        <app-text-input [formGrp]="registerForm" name="Email" formCtrlName="email" [placeholder]="'Email'"
+            [type]="'email'" label="Email" [required]="true"
             [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
         </app-text-input>
 
-        <app-text-input [formGrp]="registerForm" name="Full name" formCtrlName="fullName" [placeholder]="'Full name'" [type]="'text'"
-            label="Full name" [required]="true"
+        <app-text-input [formGrp]="registerForm" name="Full name" formCtrlName="fullName" [placeholder]="'Full name'"
+            [type]="'text'" label="Full name" [required]="true"
             [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
         </app-text-input>
 
-        <app-text-input [formGrp]="registerForm" name="Department" formCtrlName="department" [placeholder]="'Department'" [type]="'text'"
-            label="Department" [required]="true"
+        <app-text-input [formGrp]="registerForm" name="Department" formCtrlName="department"
+            [placeholder]="'Department'" [type]="'text'" label="Department" [required]="true"
             [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
         </app-text-input>
 
-        <app-text-input [formGrp]="registerForm" name="Student ID / Staff ID" formCtrlName="identity" [placeholder]="'Student ID / Staff ID'" [type]="'text'"
-            label="Student ID / Staff ID" [required]="true"
+        <app-text-input [formGrp]="registerForm" name="Student ID / Staff ID" formCtrlName="identity"
+            [placeholder]="'Student ID / Staff ID'" [type]="'text'" label="Student ID / Staff ID" [required]="true"
             [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
         </app-text-input>
 
-        <app-text-input [formGrp]="registerForm" name="Role" formCtrlName="role" [placeholder]="'Role'" [type]="'text'"
-            label="Role" [required]="true"
+        <app-select-input formCtrlName="role" [formGrp]="registerForm" [label]="'Role'" [required]="true" [options]="[
+                { value: 'student', label: 'Student' },
+                { value: 'examiner', label: 'Examiner' }
+              ]" [name]="'Role'"
             [customClass]="'bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl placeholder-white/70 text-white px-4 py-2 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out'">
-        </app-text-input>
+        </app-select-input>
 
         <app-text-input [formGrp]="registerForm" name="Password" formCtrlName="password" [placeholder]="'Password'"
             [type]="'password'" label="Password" [required]="true"

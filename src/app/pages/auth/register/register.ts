@@ -8,10 +8,11 @@ import { UtilsService } from '../../../core/services/shared/utils/utils.service'
 import { AuthLayout } from '../../../layout/auth/auth-layout/auth-layout';
 import { Button } from '../../../shared/components/button/button';
 import { TextInput } from '../../../shared/components/text-input/text-input';
+import { SelectInput } from "../../../shared/components/select-input/select-input";
 
 @Component({
   selector: 'app-register',
-  imports: [TextInput, Button, AuthLayout, RouterModule],
+  imports: [TextInput, Button, AuthLayout, RouterModule, SelectInput],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
